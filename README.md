@@ -11,8 +11,12 @@ O Flyfood é uma ferramenta de linha de comando que fornece ao usuário a rota m
 ## Ferramentas Utilizadas
 <table>
   <tr>
-    <td>Python 3</td>
-    <td></td>
+    <td> Python 3</td>
+    <td>Linguagem de programação</td>
+  </tr>
+  <tr>
+    <td>VSCode</td>
+    <td>IDE de desenvolvimento do código-fonte</td>
   </tr>
 </table>
 
@@ -20,7 +24,8 @@ O Flyfood é uma ferramenta de linha de comando que fornece ao usuário a rota m
 <table>
   <tr>
     <td>time</td>
-    <td></td>
+    <td>medição do tempo de execução do programa</td>
   </tr>
 </table>
-## Instalações Necessárias
+<h2>Instalações Necessárias</h2>
+<p>...</p>
