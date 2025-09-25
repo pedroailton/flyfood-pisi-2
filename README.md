@@ -13,7 +13,7 @@
 <h2>Ferramentas Utilizadas</h2>
 <table>
     <tr>
-        <td>![Logo do Python]() Python 3</td>
+        <td><img src="logo-python.png" alt="Logo do Python" width="500"> Python 3</td>
         <td>Linguagem de programação</td>
     </tr>
     <tr>
