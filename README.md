@@ -13,11 +13,11 @@
 <h2>Ferramentas Utilizadas</h2>
 <table>
     <tr>
-        <td><img src="logo-python.png" alt="Logo do Python" width="500"> Python 3</td>
+        <td><img src="logo-python.png" alt="Logo do Python" width="25"> Python 3</td>
         <td>Linguagem de programação</td>
     </tr>
     <tr>
-        <td>VSCode</td>
+        <td><img src="logo-vscode" alt="Logo do VSCode" width="25">VSCode</td>
         <td>IDE de desenvolvimento do código-fonte</td>
     </tr>
 </table>
