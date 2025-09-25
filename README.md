@@ -26,7 +26,7 @@
 <table>
     <tr>
         <td>time</td>
-        <td>medição do tempo de execução do programa</td>
+        <td>medição do tempo de execução do programa (cronômetro)</td>
     </tr>
 </table>
 
