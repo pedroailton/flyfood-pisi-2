@@ -20,6 +20,14 @@
         <td><img src="logo-vscode" alt="Logo do VSCode" width="25">VSCode</td>
         <td>IDE de desenvolvimento do código-fonte</td>
     </tr>
+    <tr>
+        <td><img src="logo-git.png" alt="Logo do Git" width="25">Git</td>
+        <td>Versionamento de código</td>
+    </tr>
+    <tr>
+        <td><img src="logo-github.png" alt="Logo do GitHub" width="25">GitHub</td>
+        <td>Repositório e cooperação no desenvolvimento</td>
+    </tr>
 </table>
 
 <h2>Bibliotecas Utilizadas</h2>
@@ -32,3 +40,6 @@
 
 <h2>Instalações Necessárias</h2>
 <p>...</p>
+
+<h2>Próximos Passos</h2>
+<p>Conversão para uma aplicação web com HTML, CSS e JavaScript</p>
