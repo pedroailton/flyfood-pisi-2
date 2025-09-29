@@ -53,20 +53,16 @@
   for linha in linhas[1:]:: Inicia um loop. A parte linhas[1:] é crucial: é um "fatiamento" (slicing) da lista que significa "pegue todos os elementos a partir do segundo até o final". Isso pula a primeira linha (que continha as dimensões da matriz e já foi processada).
   
   matriz.append(linha.split()): Para cada linha de texto da matriz, o método .split() a transforma em uma lista de seus elementos. Por exemplo, a string "R 0 0 C" se torna a lista ['R', '0', '0', 'C']. Essa lista (que representa uma linha da matriz) é então adicionada (append) à lista principal matriz.
-  
   Resultado: Ao final do loop, matriz será uma lista de listas, representando a grade do arquivo.
   
   Bloco 4: Identificação dos Pontos de Entrega
-  Python
-  
-  # Identifica os pontos de entrega 
   pontos = {}
   for i in range(num_linhas):
       for j in range(num_colunas):
           valor = matriz[i][j]
           if valor != "0":
               pontos[valor.upper()] = (i, j)
-  pontos = {}: Inicializa um dicionário vazio. Dicionários são perfeitos para armazenar pares de chave-valor (neste caso, "Nome do Ponto" -> "Coordenadas").
+  pontos = {}: Inicializa um dicionário vazio, estrutura de dados perfeita para armazenar pares de chave-valor. No caso do peojeto, "Nome do Ponto" -> "Coordenadas".
   
   for i in range(num_linhas):: Um loop que itera pelos índices das linhas (de 0 até num_linhas - 1). i representa a linha atual.
   
@@ -78,7 +74,7 @@
   
   pontos[valor.upper()] = (i, j): Se o valor não for "0", esta linha é executada.
   
-  valor.upper(): Converte o nome do ponto para maiúsculas (ex: 'r' vira 'R'). Isso garante consistência.
+  valor.upper(): Converte o nome do ponto para maiúsculas (ex: 'r' vira 'R'). Isso garante consistência, tratando um possível erro de entrada do usuário.
   
   pontos[...] = (i, j): Adiciona uma nova entrada ao dicionário pontos. A chave é o nome do ponto em maiúsculas (ex: 'R'), e o valor é uma tupla com suas coordenadas (i, j).
   
