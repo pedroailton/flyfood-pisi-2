@@ -1,0 +1,128 @@
+# Arquivo parser.py (de Gustavo)
+
+## Explicando a função lerArquivo():
+  No código ela está assim:
+  ```
+  def lerArquivo(caminho_arquivo):
+    with open(caminho_arquivo, "r", encoding="utf-8") as arq:
+        linhas = [linha.strip() for linha in arq.readlines()]
+    return linhas
+  ```
+  
+  open() é uma função da biblioteca padrão em Python recomendada para abertura de arquivos. No código, ela foi chamada com 3 parâmetros
+  1. O camniho do arquivo .txt com a matriz a ser lido pelo programa;
+  2. O modo de abertura do programa, que pode ser "w", para escrever no arquivo, "a" para fazer um apêndice (adicionar elementos ao final do arquivo), mas o que foi utilizado foi o "r", utilizado para leitura do arquivo;
+  3. O modo de codificação e decodificação de caracteres, que escolhemos o UTF-8, capaz de ler algarismos e caraceteres especiais, o suficiente para as aplicações do projeto.
+  
+  O comando with cria um bloco de contexto. A grande vantagem dele é que o Python fecha o arquivo automaticamente assim que o bloco de código dentro dele termina, mesmo que ocorra um erro. Isso evita bugs e corrupção de arquivos. arq é a variável que representa o arquivo aberto dentro deste bloco.
+
+## Explicando a função parseArquivo():
+
+  Em resumo, ela interpreta o conteúdo, assumindo que ele tem uma estrutura específica (uma matriz com pontos de interesse), e o transforma em um dicionário.
+  O objetivo principal da função é pegar a lista "linhas", resultado da função lerArquivo(), e extrair delas:
+  1. As dimensões de uma matriz (grade/mapa);
+  2. A própria matriz;
+  3. As coordenadas (linha, coluna) de pontos específicos dentro dessa matriz.
+  
+  Bloco 1: Leitura do Arquivo .txt
+  
+  linhas = lerArquivo(caminho_arquivo)
+  Ação: A função começa chamando a lerArquivo, definida anteriormente.
+  
+  Resultado: A variável "linhas" agora contém uma lista de strings, onde cada string é uma linha do arquivo, já sem espaços extras ou quebras de linha no início/fim.
+  
+  Bloco 2: Extração das Dimensões
+  ```
+  num_linhas, num_colunas = map(int, linhas[0].split())
+  ```
+  Esta linha é muito eficiente e faz várias coisas de uma vez. Vamos quebrá-la:
+  
+  linhas[0]: Acessa a primeira linha do arquivo (índice 0). O código assume que esta linha contém as dimensões, como por exemplo "5 5".
+  
+  .split(): Este método quebra a string em uma lista de strings, usando o espaço como separador. "5 5" se torna ['5', '5'].
+  
+  map(int, ...): A função map aplica uma outra função (o primeiro argumento, função int) a cada item de uma lista (o segundo argumento, ['5', '5']). Ou seja, ela converte cada string da lista em um número inteiro. O resultado é conceitualmente [5, 5].
+  
+  num_linhas, num_colunas = ...: Isso é chamado de "desempacotamento de tupla/lista". O primeiro valor do resultado do map (o 5) é atribuído à variável num_linhas, e o segundo valor (5) é atribuído a num_colunas.
+  
+  Bloco 3: Montagem da Matriz  
+  matriz = []
+  for linha in linhas[1:]:
+      matriz.append(linha.split())
+  
+  for linha in linhas[1:]:: Inicia um loop. A parte linhas[1:] é crucial: é um "fatiamento" (slicing) da lista que significa "pegue todos os elementos a partir do segundo até o final". Isso pula a primeira linha (que continha as dimensões da matriz e já foi processada).
+  
+  matriz.append(linha.split()): Para cada linha de texto da matriz, o método .split() a transforma em uma lista de seus elementos. Por exemplo, a string "R 0 0 C" se torna a lista ['R', '0', '0', 'C']. Essa lista (que representa uma linha da matriz) é então adicionada (append) à lista principal matriz.
+  Resultado: Ao final do loop, matriz será uma lista de listas, representando a grade do arquivo.
+  
+  Bloco 4: Identificação dos Pontos de Entrega
+  pontos = {}
+  for i in range(num_linhas):
+      for j in range(num_colunas):
+          valor = matriz[i][j]
+          if valor != "0":
+              pontos[valor.upper()] = (i, j)
+  pontos = {}: Inicializa um dicionário vazio, estrutura de dados perfeita para armazenar pares de chave-valor. No caso do peojeto, "Nome do Ponto" -> "Coordenadas".
+  
+  for i in range(num_linhas):: Um loop que itera pelos índices das linhas (de 0 até num_linhas - 1). i representa a linha atual.
+  
+  for j in range(num_colunas):: Um loop aninhado que itera pelos índices das colunas (de 0 até num_colunas - 1). j representa a coluna atual. Juntos, esses dois loops visitam cada célula da matriz.
+  
+  valor = matriz[i][j]: Pega o valor na célula da linha i e coluna j.
+  
+  if valor != "0":: Verifica se o valor da célula é diferente de "0". A lógica aqui assume que "0" representa um caminho vazio e qualquer outra coisa é um ponto de interesse.
+  
+  pontos[valor.upper()] = (i, j): Se o valor não for "0", esta linha é executada.
+  
+  valor.upper(): Converte o nome do ponto para maiúsculas (ex: 'r' vira 'R'). Isso garante consistência, tratando um possível erro de entrada do usuário.
+  
+  pontos[...] = (i, j): Adiciona uma nova entrada ao dicionário pontos. A chave é o nome do ponto em maiúsculas (ex: 'R'), e o valor é uma tupla com suas coordenadas (i, j).
+  
+  Bloco 5: Retorno dos Dados Estruturados
+  Python
+  
+  return {
+      "num_linhas": num_linhas,
+      "num_colunas": num_colunas,
+      "matriz": matriz,
+      "pontos": pontos
+  }
+  Finalmente, a função retorna um dicionário único que organiza todos os dados extraídos de forma clara e fácil de acessar. Em vez de retornar 4 variáveis separadas, ela retorna um só objeto que contém tudo.
+  
+  Exemplo Prático
+  Imagine que o arquivo mapa.txt tem o seguinte conteúdo:
+  
+  4 5
+  R 0 0 A 0
+  0 0 0 0 0
+  0 B 0 0 0
+  0 0 C 0 0
+  Ao chamar dados = parseArquivo("mapa.txt"), a variável dados conteria o seguinte dicionário:
+  
+  Python
+  
+  {
+      "num_linhas": 4,
+      "num_colunas": 5,
+      "matriz": [
+          ['R', '0', '0', 'A', '0'],
+          ['0', '0', '0', '0', '0'],
+          ['0', 'B', '0', '0', '0'],
+          ['0', '0', 'C', '0', '0']
+      ],
+      "pontos": {
+          'R': (0, 0),
+          'A': (0, 3),
+          'B': (2, 1),
+          'C': (3, 2)
+      }
+  }
+  Com essa estrutura, fica muito fácil usar os dados depois. Por exemplo, para pegar as coordenadas do ponto 'B', você faria dados['pontos']['B'], que retornaria (2, 1).
+
+# Arquivo otimizador.py (de Felipe)
+
+## Explicando a função calcularDistancia():
+
+## Explicando a função calcularCustoTotalDaRota():
+
+## Explicando a função otimizarRota():
