@@ -1,8 +1,8 @@
 # Para medição de tempo e desempenho do programa para diferentes entradas
 import time
 
-from parser import parse_arquivo
-from otimizador import otimizar_rota
+from parser import parseArquivo
+from otimizador import otimizarRota
 
 def main(cronometro=False):
     print("::: Otimizador de Rotas FlyFood :::")
@@ -12,10 +12,10 @@ def main(cronometro=False):
         if cronometro:
             tempo_inicial = time.perf_counter()
 
-        pontos_mapeados = parse_arquivo(caminho)
+        pontos_mapeados = parseArquivo(caminho)
         print("Pontos encontrados:", pontos_mapeados)
 
-        melhor_rota = otimizar_rota(pontos_mapeados)
+        melhor_rota = otimizarRota(pontos_mapeados)
 
         if cronometro:
             tempo_final = time.perf_counter()
