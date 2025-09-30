@@ -13,19 +13,19 @@
 <h2>Ferramentas Utilizadas</h2>
 <table>
     <tr>
-        <td><img src="logo-python.png" alt="Logo do Python" width="25"> Python 3</td>
+        <td><img src="imagens/logo-python.png" alt="Logo do Python" width="25"> Python 3</td>
         <td>Linguagem de programação</td>
     </tr>
     <tr>
-        <td><img src="logo-vscode" alt="Logo do VSCode" width="25">VSCode</td>
+        <td><img src="imagens/logo-vscode.png" alt="Logo do VSCode" width="25">VSCode</td>
         <td>IDE de desenvolvimento do código-fonte</td>
     </tr>
     <tr>
-        <td><img src="logo-git.png" alt="Logo do Git" width="25">Git</td>
+        <td><img src="imagens/logo-git.png" alt="Logo do Git" width="25">Git</td>
         <td>Versionamento de código</td>
     </tr>
     <tr>
-        <td><img src="logo-github.png" alt="Logo do GitHub" width="25">GitHub</td>
+        <td><img src="imagens/logo-github.png" alt="Logo do GitHub" width="25">GitHub</td>
         <td>Repositório e cooperação no desenvolvimento</td>
     </tr>
 </table>
