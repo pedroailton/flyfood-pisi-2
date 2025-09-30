@@ -8,7 +8,6 @@
         linhas = [linha.strip() for linha in arq.readlines()]
     return linhas
   ```
-  
   open() é uma função da biblioteca padrão em Python recomendada para abertura de arquivos. No código, ela foi chamada com 3 parâmetros
   1. O camniho do arquivo .txt com a matriz a ser lido pelo programa;
   2. O modo de abertura do programa, que pode ser "w", para escrever no arquivo, "a" para fazer um apêndice (adicionar elementos ao final do arquivo), mas o que foi utilizado foi o "r", utilizado para leitura do arquivo;
@@ -56,17 +55,20 @@
   Resultado: Ao final do loop, matriz será uma lista de listas, representando a grade do arquivo.
   
   Bloco 4: Identificação dos Pontos de Entrega
+  '''
   pontos = {}
   for i in range(num_linhas):
       for j in range(num_colunas):
           valor = matriz[i][j]
           if valor != "0":
               pontos[valor.upper()] = (i, j)
-  pontos = {}: Inicializa um dicionário vazio, estrutura de dados perfeita para armazenar pares de chave-valor. No caso do peojeto, "Nome do Ponto" -> "Coordenadas".
+  '''
+
+  pontos = {}: Inicializa um dicionário vazio, estrutura de dados perfeita para armazenar pares de chave-valor. No caso do projeto, "Nome do Ponto" -> "Coordenadas".
   
   for i in range(num_linhas):: Um loop que itera pelos índices das linhas (de 0 até num_linhas - 1). i representa a linha atual.
-  
-  for j in range(num_colunas):: Um loop aninhado que itera pelos índices das colunas (de 0 até num_colunas - 1). j representa a coluna atual. Juntos, esses dois loops visitam cada célula da matriz.
+  for j in range(num_colunas):: Um loop aninhado que itera pelos índices das colunas (de 0 até num_colunas - 1). j representa a coluna atual.
+  Juntos, esses dois loops visitam cada célula da matriz.
   
   valor = matriz[i][j]: Pega o valor na célula da linha i e coluna j.
   
@@ -74,19 +76,20 @@
   
   pontos[valor.upper()] = (i, j): Se o valor não for "0", esta linha é executada.
   
-  valor.upper(): Converte o nome do ponto para maiúsculas (ex: 'r' vira 'R'). Isso garante consistência, tratando um possível erro de entrada do usuário.
+  valor.upper(): Converte o nome do ponto para maiúsculas (ex: 'r' vira 'R'). Isso garante consistência, tratando um possível erro de entrada do usuário com pontos com letra minúscula.
   
   pontos[...] = (i, j): Adiciona uma nova entrada ao dicionário pontos. A chave é o nome do ponto em maiúsculas (ex: 'R'), e o valor é uma tupla com suas coordenadas (i, j).
   
   Bloco 5: Retorno dos Dados Estruturados
-  Python
-  
+  '''
   return {
       "num_linhas": num_linhas,
       "num_colunas": num_colunas,
       "matriz": matriz,
       "pontos": pontos
   }
+  '''
+
   Finalmente, a função retorna um dicionário único que organiza todos os dados extraídos de forma clara e fácil de acessar. Em vez de retornar 4 variáveis separadas, ela retorna um só objeto que contém tudo.
   
   Exemplo Prático
@@ -97,9 +100,8 @@
   0 0 0 0 0
   0 B 0 0 0
   0 0 C 0 0
+
   Ao chamar dados = parseArquivo("mapa.txt"), a variável dados conteria o seguinte dicionário:
-  
-  Python
   
   {
       "num_linhas": 4,
@@ -119,10 +121,91 @@
   }
   Com essa estrutura, fica muito fácil usar os dados depois. Por exemplo, para pegar as coordenadas do ponto 'B', você faria dados['pontos']['B'], que retornaria (2, 1).
 
+
+
 # Arquivo otimizador.py (de Felipe)
 
-## Explicando a função calcularDistancia():
+  ## Explicando a função calcularDistancia():
+  
+  ## Explicando a função calcularCustoTotalDaRota():
 
-## Explicando a função calcularCustoTotalDaRota():
+  ## Explicando a função otimizarRota():
+       
+    A estratégia da função é exatamente essa:
+    
+    1.  Gerar todas as rotas possíveis.
+    2.  Calcular a distância total de cada uma dessas rotas.
+    3.  Manter um registro da rota que teve o menor custo até o momento.
+    4.  Ao final, a que tiver o menor custo de todas é a melhor rota (rota ótima, ou rota otimizada).
+        
+    ### Análise do Código Passo a Passo
+    
+    **1. Isolar os Pontos de Entrega**
+    
+    ```
+    # 1. Isola os pontos de entrega (todos exceto 'R')
+    pontos_de_entrega = [p for p in pontos if p != 'R']
+    ```
+          Aqui foi aplicado uma das funcionalidades únicas do Python, a List Comprehension. Ela é uma forma concisa e eficiente de criar uma nova lista a partir de outra coleção, aplicando uma transformação e/ou um filtro a cada elemento. Neste caso, ela está sendo usada para filtrar a lista de pontos, mantendo apenas os que são destinos de entrega.
 
-## Explicando a função otimizarRota():
+      * `pontos` é um dicionário que contém as coordenadas de todos os locais, incluindo o ponto de partida 'R' (que simboliza o Restaurante do Fly Food).
+      * Para encontrar a melhor *sequência de entregas*, não precisamos do ponto 'R' na lista de permutação. Ele será o início e o fim da viagem, mas a ordem que otimizamos é a dos pontos intermediários.
+      * Esta linha cria uma lista `pontos_de_entrega` contendo apenas as chaves do dicionário que **não são** 'R'. Por exemplo, se `pontos` tem `{'R', 'A', 'B', 'C'}`, `pontos_de_entrega` se tornará `['A', 'B', 'C']`.
+    
+    **2. Gerar Todas as Rotas Possíveis**
+    
+    ```
+    # 2. Gera todas as sequências (permutações) possíveis para os pontos de entrega
+    rotas_possiveis = list(permutations(pontos_de_entrega))
+    ```
+    
+      * Aqui está a "mágica" da força bruta. A função `permutations` (do módulo `itertools` do Python) gera todas as sequências possíveis para uma lista.
+      * Se `pontos_de_entrega` for `['A', 'B', 'C']`, `rotas_possiveis` se tornará uma lista de tuplas com todas as 6 combinações que vimos anteriormente: `[('A', 'B', 'C'), ('A', 'C', 'B'), ...]`.
+    
+    **3. Preparar para a Competição**
+    ```
+    # 3. Inicializa variáveis para acompanhar a melhor rota encontrada até agora
+    melhor_rota = None
+    menor_custo = float('inf')  # 'inf' representa um número infinito
+    ```
+    
+      * Precisamos de variáveis para guardar a melhor rota encontrada e seu custo.
+      * `melhor_rota` começa como `None` (nenhuma rota foi verificada ainda).
+      * `menor_custo` é inicializado com um valor "infinito" (`float('inf')`). Isso é um truque inteligente: a primeira rota que calcularmos terá, com certeza, um custo *menor que infinito*, então ela se tornará a "melhor rota" inicial, estabelecendo um primeiro recorde a ser batido.
+    
+    **4. O Loop Principal: Testando Cada Rota**
+    
+    ```
+    # 4. Itera sobre cada rota possível para encontrar a de menor custo
+    for rota_atual in rotas_possiveis:
+        # Calcula o custo da rota que está sendo verificada
+        custo_da_rota_atual = _calcular_custo_total_da_rota(rota_atual, pontos)
+    
+        # Se o custo desta rota for menor que o menor custo já registrado,
+        # ela se torna a nova melhor rota.
+        if custo_da_rota_atual < menor_custo:
+            menor_custo = custo_da_rota_atual
+            melhor_rota = rota_atual
+    ```
+    
+      * Este `for` loop passa por cada uma das rotas geradas no passo 2.
+      * Para cada `rota_atual` (ex: `('A', 'B', 'C')`):
+          * Ele chama uma outra função (não mostrada aqui, mas crucial), a `_calcular_custo_total_da_rota`. Essa função deve receber a sequência de pontos (ex: `'A', 'B', 'C'`) e o dicionário `pontos` (com as coordenadas) e calcular a distância total do caminho (provavelmente `R -> A -> B -> C -> R`).
+          * Em seguida, ele compara (`if`) o `custo_da_rota_atual` com o `menor_custo` registrado até agora.
+          * Se a rota atual for mais barata, ela "ganha": o `menor_custo` é atualizado com o novo valor mais baixo, e a `melhor_rota` passa a ser a `rota_atual`.
+      * O loop continua até que todas as rotas possíveis tenham sido testadas. No final, as variáveis `menor_custo` e `melhor_rota` conterão o custo e a sequência da rota campeã.
+    
+    **5. Formatar e Retornar o Resultado**
+    
+    ```python
+    # 5. Formata a melhor rota encontrada em uma string para exibição
+    resultado_formatado = " ".join(melhor_rota)
+    
+    return resultado_formatado
+    ```
+    
+      * A `melhor_rota` guardada é uma tupla, como `('A', 'D', 'C', 'B')`.
+      * `" ".join(melhor_rota)` transforma essa tupla em uma string única, com os elementos separados por espaço: `"A D C B"`.
+      * O método de string `.join()` funciona com qualquer "iterável" (listas, tuplas, etc.), desde que todos os seus elementos sejam strings. No exemplo do Fly Food, é uma tupla no seguinte formato, por exemplo ('A', 'D', 'C', 'B').
+      * O Python pega o separador (" ") e o insere entre cada um dos elementos do iterável (melhor_rota). Ele não coloca no começo nem no final.
+      * A função retorna essa string formatada, que representa a ordem otimizada das entregas.
