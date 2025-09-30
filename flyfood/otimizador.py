@@ -1,6 +1,6 @@
 from itertools import permutations
 
-def _calcular_distancia(ponto_a, ponto_b):
+def calcularDistancia(ponto_a, ponto_b):
     """
     Calcula a distância de Manhattan entre dois pontos em uma grade.
     ponto_a e b são tuplas com as posições dos 2 pontos"""
@@ -16,7 +16,7 @@ def _calcular_distancia(ponto_a, ponto_b):
     #retorna distancia de a e b
     return distancia
 
-def _calcular_custo_total_da_rota(rota, pontos):
+def calcularCustoTotalDaRota(rota, pontos):
     """
     Calcula o custo total de uma rota específica, começando e terminando no ponto 'R'.
 
@@ -29,22 +29,22 @@ def _calcular_custo_total_da_rota(rota, pontos):
 
     # 1. Calcula o custo da origem 'R' até o primeiro ponto da rota
     primeiro_ponto = pontos[rota[0]]
-    custo_total += _calcular_distancia(ponto_r, primeiro_ponto)
+    custo_total += calcularDistancia(ponto_r, primeiro_ponto)
 
     # 2. Calcula o custo entre os pontos intermediários da rota
     # O loop vai do primeiro ponto até o penúltimo
     for i in range(len(rota) - 1):
         ponto_atual = pontos[rota[i]]
         proximo_ponto = pontos[rota[i+1]]
-        custo_total += _calcular_distancia(ponto_atual, proximo_ponto)
+        custo_total += calcularDistancia(ponto_atual, proximo_ponto)
 
     # 3. Calcula o custo do último ponto da rota de volta para a origem 'R'
     ultimo_ponto = pontos[rota[-1]]
-    custo_total += _calcular_distancia(ultimo_ponto, ponto_r)
+    custo_total += calcularDistancia(ultimo_ponto, ponto_r)
 
     return custo_total
 
-def otimizar_rota(pontos):
+def otimizarRota(pontos):
     """
     parte mais importante
     
@@ -59,7 +59,7 @@ def otimizar_rota(pontos):
              separada por espaços. Exemplo: "A D C B".
     """
     # 1. Isola os pontos de entrega (todos exceto 'R')
-    pontos_de_entrega = [p for p in pontos if p != 'R']
+    pontos_de_entrega = [p for p in pontos if p != 'R'] # List Comprehension: funcionalidade do Python
     
     # Se não houver pontos de entrega, retorna uma mensagem
     if not pontos_de_entrega:
@@ -75,7 +75,7 @@ def otimizar_rota(pontos):
     # 4. Itera sobre cada rota possível para encontrar a de menor custo
     for rota_atual in rotas_possiveis:
         # Calcula o custo da rota que está sendo verificada
-        custo_da_rota_atual = _calcular_custo_total_da_rota(rota_atual, pontos)
+        custo_da_rota_atual = calcularCustoTotalDaRota(rota_atual, pontos)
 
         # Se o custo desta rota for menor que o menor custo já registrado,
         # ela se torna a nova melhor rota.
