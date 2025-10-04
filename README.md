@@ -10,7 +10,7 @@
 
 <p>O Flyfood é uma ferramenta de linha de comando que fornece ao usuário a rota mais rápida para as entregas dos drones FlyFood dada uma matriz como entrada em arquivo .txt que configura o mapa da região de entrega.</p>
 
-<img src="imagens/Logo FlyFood.gif" width="250" height="250" alt="Demonstração do projeto">
+<img src="imagens/Logo FlyFood.png" width="250" height="250" alt="Demonstração do projeto">
 
 <h2>Ferramentas Utilizadas</h2>
 <table>
