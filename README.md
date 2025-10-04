@@ -19,15 +19,15 @@
         <td>Linguagem de programação</td>
     </tr>
     <tr>
-        <td><img src="imagens/logo-vscode.png" alt="Logo do VSCode" width="25">VSCode</td>
+        <td><img src="imagens/logo-vscode.png" alt="Logo do VSCode" width="25"> VSCode</td>
         <td>IDE de desenvolvimento do código-fonte</td>
     </tr>
     <tr>
-        <td><img src="imagens/logo-git.png" alt="Logo do Git" width="25">Git</td>
+        <td><img src="imagens/logo-git.png" alt="Logo do Git" width="25"> Git</td>
         <td>Versionamento de código</td>
     </tr>
     <tr>
-        <td><img src="imagens/logo-github.png" alt="Logo do GitHub" width="25">GitHub</td>
+        <td><img src="imagens/logo-github.png" alt="Logo do GitHub" width="25"> GitHub</td>
         <td>Repositório e cooperação no desenvolvimento</td>
     </tr>
 </table>
