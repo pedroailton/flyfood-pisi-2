@@ -36,12 +36,19 @@
 <table>
     <tr>
         <td>time</td>
-        <td>medição do tempo de execução do programa (cronômetro)</td>
+        <td>Medição do tempo de execução do programa (cronômetro).</td>
+    </tr>
+    <tr>
+        <td>itertools</td>
+        <td>Geração de todas as permutações de rotas possíveis para a implementação do algoritmo de força bruta.</td>
     </tr>
 </table>
 
-<h2>Instalações Necessárias</h2>
-<p>...</p>
+<h2>Instalações e Execução</h2>
+<p>O projeto utiliza apenas bibliotecas padrão do Python, portanto, a única instalação necessária é a do <strong>Python 3</strong>. Nenhum pacote adicional precisa ser instalado via <code>pip</code>.</p>
+<p>Para executar o programa, utilize o seguinte comando no terminal, dentro da pasta do projeto:</p>
+<pre><code>python main.py</code></pre>
+<p>Após a execução, o programa solicitará o caminho para o arquivo de entrada (ex: <code>entrada.txt</code>).</p>
 
 <h2>Próximos Passos</h2>
-<p>Conversão para uma aplicação web com HTML, CSS e JavaScript</p>
+<p>Conversão para uma aplicação web com HTML, CSS e JavaScript.</p>
