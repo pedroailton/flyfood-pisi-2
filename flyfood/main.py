@@ -15,7 +15,7 @@ def main(cronometro=False):
         pontos_mapeados = parseArquivo(caminho)
         print("Pontos encontrados:", pontos_mapeados)
 
-        melhor_rota = otimizarRota(pontos_mapeados)
+        melhor_rota = otimizarRota(pontos_mapeados["pontos"])
 
         if cronometro:
             tempo_final = time.perf_counter()
