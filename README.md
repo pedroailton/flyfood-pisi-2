@@ -1,4 +1,3 @@
-<img width="1087" height="487" alt="image" src="https://github.com/user-attachments/assets/51df594d-2ca4-4140-ac82-336c894e71e5" /><img width="1087" height="487" alt="image" src="https://github.com/user-attachments/assets/2d757aa7-a2ab-4320-b3ea-30ae67087947" /><h1>FlyFood</h1>
 <p>
     <strong>Nome da Aplicação:</strong> Fly Food<br>
     <strong>Integrantes:</strong> <a href="https://github.com/Felipecs22">Felipe Cavalcante</a>, <a href="https://github.com/GustavoSantosgcs">Gustavo Santos</a> e <a href="https://github.com/pedroailton">Pedro Ailton</a><br>
