@@ -24,6 +24,13 @@ O arquivo deve ter o seguinte formato:
 0 0 0 0 C
 R 0 B 0 0
 ```
+<ul>
+    <li>Uma matriz A de dimensões M×N que representa a área de entrega;</li>
+    <li>Cada elemento Aij​ (com i representando a linha e j a coluna) contém um identificador;</li>
+    <li>O valor "0" indica uma posição vazia;</li>
+    <li>Letras (como 'R', 'A', 'B', etc.) identificam pontos de interesse.</li>
+</ul>
+
 <h2>Ferramentas Utilizadas</h2>
 <table>
     <tr>
