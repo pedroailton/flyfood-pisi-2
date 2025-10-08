@@ -1,4 +1,4 @@
-# Para medição de tempo e desempenho do programa para diferentes entradas
+# Para medição de tempo de execução do programa
 import time
 
 from parser import parseArquivo
@@ -21,7 +21,7 @@ def main(cronometro=False):
 
     try:
         if cronometro:
-            tempo_inicial = time.perf_counter()
+            tempo_inicial = time.perf_counter() # inicia contador
 
         pontos_mapeados = parseArquivo(caminho)
         print("\nInformações do arquivo:")
@@ -39,7 +39,7 @@ def main(cronometro=False):
         melhor_rota = otimizarRota(pontos_mapeados["pontos"])
 
         if cronometro:
-            tempo_final = time.perf_counter()
+            tempo_final = time.perf_counter() # finaliza o contador
             print(f"\nTempo de execução: {(tempo_final - tempo_inicial):.4f} segundos")
 
         print("\nCalculando rota...")
