@@ -53,4 +53,4 @@ def main(cronometro=False):
         print(f"Ocorreu um erro inesperado: {e}")
 
 if __name__ == "__main__":
-    main()
+    main(cronometro=True)
