@@ -42,6 +42,10 @@
         <td>itertools</td>
         <td>Geração de todas as permutações de rotas possíveis para a implementação do algoritmo de força bruta.</td>
     </tr>
+    <tr>
+        <td>csv</td>
+        <td>Leitura e manipulação de arquivos no formato CSV.</td>
+    </tr>
 </table>
 
 <h2>Instalações e Execução</h2>
