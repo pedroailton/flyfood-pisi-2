@@ -1,4 +1,4 @@
-<h1>FlyFood</h1>
+<img width="1087" height="487" alt="image" src="https://github.com/user-attachments/assets/51df594d-2ca4-4140-ac82-336c894e71e5" /><img width="1087" height="487" alt="image" src="https://github.com/user-attachments/assets/2d757aa7-a2ab-4320-b3ea-30ae67087947" /><h1>FlyFood</h1>
 <p>
     <strong>Nome da Aplicação:</strong> Fly Food<br>
     <strong>Integrantes:</strong> <a href="https://github.com/Felipecs22">Felipe Cavalcante</a>, <a href="https://github.com/GustavoSantosgcs">Gustavo Santos</a> e <a href="https://github.com/pedroailton">Pedro Ailton</a><br>
@@ -12,6 +12,19 @@
 
 <img src="imagens/Logo FlyFood.png" width="250" height="250" alt="Demonstração do projeto">
 
+<h2>Formato da Entrada</h2>
+
+O arquivo de entrada (`.txt`) deve seguir uma estrutura de matriz para representar o mapa de entregas.
+
+O arquivo deve ter o seguinte formato:
+
+```
+4 5
+0 0 0 0 D
+0 A 0 0 0
+0 0 0 0 C
+R 0 B 0 0
+```
 <h2>Ferramentas Utilizadas</h2>
 <table>
     <tr>
