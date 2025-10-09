@@ -44,35 +44,31 @@ def calcularCustoTotalDaRota(rota, pontos):
 
     return custo_total
 
-def otimizarRota(pontos):
+def otimizarRota(pontos, melhores_rotas=False):
     """
     parte mais importante
     
     Encontra a rota de menor custo possível que visita todos os pontos de entrega. [cite: 11]
     Utiliza uma abordagem de força bruta, testando todas as permutações possíveis.
-
-    Args:
-        pontos (dict): Dicionário com os nomes e coordenadas de todos os pontos, incluindo 'R'.
-
-    Returns:
-        str: Uma string com a sequência de pontos da rota otimizada, 
-             separada por espaços. Exemplo: "A D C B".
     """
     # 1. Isola os pontos de entrega (todos exceto 'R')
-    pontos_de_entrega = [p for p in pontos if p != 'R'] # List Comprehension: funcionalidade do Python
+    pontos_de_entrega = []
+
+    for p in pontos:
+        if p != 'R':  # verifica se o elemento não é 'R'
+            pontos_de_entrega.append(p)
     
     # Se não houver pontos de entrega, retorna uma mensagem
     if not pontos_de_entrega:
         return "Nenhum ponto de entrega foi especificado."
 
-    # 2. Gera todas as sequências (permutações) possíveis para os pontos de entrega
+    # Gera todas as sequências (permutações) possíveis para os pontos de entrega
     rotas_possiveis = list(permutations(pontos_de_entrega))
     
-    # 3. Inicializa variáveis para acompanhar a melhor rota encontrada até agora
     melhor_rota = None
     menor_custo = float('inf')  # 'inf' representa um número infinito
+    contador_de_melhores_rotas = 0
 
-    # 4. Itera sobre cada rota possível para encontrar a de menor custo
     for rota_atual in rotas_possiveis:
         # Calcula o custo da rota que está sendo verificada
         custo_da_rota_atual = calcularCustoTotalDaRota(rota_atual, pontos)
@@ -82,8 +78,13 @@ def otimizarRota(pontos):
         if custo_da_rota_atual < menor_custo:
             menor_custo = custo_da_rota_atual
             melhor_rota = rota_atual
+
+            contador_de_melhores_rotas += 1
+            if melhores_rotas: # se o parâmetro for passado na chamada de função
+                melhor_rota_formatada = " ".join(melhor_rota)
+                print(f"{contador_de_melhores_rotas}ª atualização da melhor rota: {melhor_rota_formatada}")
             
-    # 5. Formata a melhor rota encontrada em uma string para exibição
+    # Formata a melhor rota encontrada em uma string para exibição
     resultado_formatado = " ".join(melhor_rota)
     
     return resultado_formatado
