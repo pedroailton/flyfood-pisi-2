@@ -4,7 +4,7 @@ import time
 from parser import parseArquivo
 from otimizador import otimizarRota
 
-def main(cronometro=False):
+def main(cronometro=False, pior_rota=False, melhores_rotas=False):
     """
     Executa o Otimizador de Rotas FlyFood.
 
@@ -36,7 +36,9 @@ def main(cronometro=False):
         for ponto, coord in pontos_mapeados['pontos'].items():
             print(f"  - {ponto}: {coord}")
 
-        melhor_rota = otimizarRota(pontos_mapeados["pontos"])
+        melhor_rota = otimizarRota(pontos_mapeados["pontos"], pior_rota, melhores_rotas)
+        # pior_rota: parâmetro para a função retornar também a pior rota
+        # melhores_rotas: parâmetro para função printar a melhor rota sempre que ela for atualizada
 
         if cronometro:
             tempo_final = time.perf_counter() # finaliza o contador

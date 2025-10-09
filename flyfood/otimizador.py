@@ -44,7 +44,7 @@ def calcularCustoTotalDaRota(rota, pontos):
 
     return custo_total
 
-def otimizarRota(pontos):
+def otimizarRota(pontos, pior_rota, melhores_rotas):
     """
     parte mais importante
     
