@@ -4,18 +4,7 @@ import time
 from parser import parseArquivo
 from otimizador import otimizarRota
 
-def main(cronometro=False, pior_rota=False, melhores_rotas=False):
-    """
-    Executa o Otimizador de Rotas FlyFood.
-
-    Lê um arquivo de entrada (TXT ou CSV) com dimensões e matriz do mapa,
-    exibe as informações formatadas e calcula a melhor rota para visitar
-    todos os pontos e retornar ao ponto 'R'.
-
-    Args:
-        cronometro (bool, opcional): Se True, mede e mostra o tempo de execução.
-    """
-    
+def main(cronometro=False, melhores_rotas=False):  
     print("::: Otimizador de Rotas FlyFood :::")
     caminho = input("Digite o caminho para o arquivo da matriz: ")
 
@@ -36,7 +25,7 @@ def main(cronometro=False, pior_rota=False, melhores_rotas=False):
         for ponto, coord in pontos_mapeados['pontos'].items():
             print(f"  - {ponto}: {coord}")
 
-        melhor_rota = otimizarRota(pontos_mapeados["pontos"], pior_rota, melhores_rotas)
+        melhor_rota = otimizarRota(pontos_mapeados["pontos"], melhores_rotas)
         # pior_rota: parâmetro para a função retornar também a pior rota
         # melhores_rotas: parâmetro para função printar a melhor rota sempre que ela for atualizada
 
@@ -55,4 +44,4 @@ def main(cronometro=False, pior_rota=False, melhores_rotas=False):
         print(f"Ocorreu um erro inesperado: {e}")
 
 if __name__ == "__main__":
-    main(cronometro=True)
+    main(cronometro=True, melhores_rotas=True)
