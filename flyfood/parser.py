@@ -15,13 +15,17 @@ def lerArquivo(caminho_arquivo):
         with open(caminho_arquivo, "r", encoding="utf-8") as arq:
             leitor = csv.reader(arq)
             # cada linha do CSV vira uma string separada por espaço
-            linhas = [" ".join(celula.strip() for celula in linha) for linha in leitor]
+            for linha in leitor:
+                celulas_processadas = []
+                for celula in linha:
+                    celulas_processadas.append(celula.strip())
+                linha_unida = " ".join(celulas_processadas)  # junta as células em uma única string separadas por espaço
+                linhas.append(linha_unida)
     else:
         with open(caminho_arquivo, "r", encoding="utf-8") as arq:
-            linhas = [linha.strip() for linha in arq]
-
+            for linha in arq:
+                linhas.append(linha.strip())
     return linhas
-
 
 def parseArquivo(caminho_arquivo):
     """
