@@ -82,9 +82,10 @@ def otimizarRota(pontos, melhores_rotas=False):
             contador_de_melhores_rotas += 1
             if melhores_rotas: # se o parâmetro for passado na chamada de função
                 melhor_rota_formatada = " ".join(melhor_rota)
-                print(f"{contador_de_melhores_rotas}ª atualização da melhor rota: {melhor_rota_formatada}")
+                print(f"{contador_de_melhores_rotas}ª atualização da melhor rota: {melhor_rota_formatada}; "
+                      f"Custo total: {custo_da_rota_atual}")
             
     # Formata a melhor rota encontrada em uma string para exibição
     resultado_formatado = " ".join(melhor_rota)
     
-    return resultado_formatado
+    return resultado_formatado, menor_custo

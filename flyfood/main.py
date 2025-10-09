@@ -5,7 +5,7 @@ from parser import parseArquivo
 from otimizador import otimizarRota
 
 def main(cronometro=False, melhores_rotas=False):  
-    print("::: Otimizador de Rotas FlyFood :::")
+    print("\n::: Otimizador de Rotas FlyFood :::")
     caminho = input("Digite o caminho para o arquivo da matriz: ")
 
     try:
@@ -24,8 +24,9 @@ def main(cronometro=False, melhores_rotas=False):
         print("\nPontos mapeados:")
         for ponto, coord in pontos_mapeados['pontos'].items():
             print(f"  - {ponto}: {coord}")
+        print()
 
-        melhor_rota = otimizarRota(pontos_mapeados["pontos"], melhores_rotas)
+        melhor_rota, custo_total = otimizarRota(pontos_mapeados["pontos"], melhores_rotas)
         # pior_rota: parâmetro para a função retornar também a pior rota
         # melhores_rotas: parâmetro para função printar a melhor rota sempre que ela for atualizada
 
@@ -36,6 +37,7 @@ def main(cronometro=False, melhores_rotas=False):
         print("\nCalculando rota...")
         print("\n-------------------------------------")
         print(f"A melhor rota encontrada é: {melhor_rota}")
+        print(f"Custo total: {custo_total} dronômetros")
         print("-------------------------------------")
 
     except FileNotFoundError:
