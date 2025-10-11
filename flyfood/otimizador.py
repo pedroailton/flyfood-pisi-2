@@ -4,7 +4,6 @@ def calcularDistancia(ponto_a, ponto_b):
     """
     Calcula a distância de Manhattan entre dois pontos em uma grade.
     ponto_a e b são tuplas com as posições dos 2 pontos"""
-
     
     # Desempacota as tuplas
     linha1, coluna1 = ponto_a
@@ -19,10 +18,10 @@ def calcularDistancia(ponto_a, ponto_b):
 def calcularCustoTotalDaRota(rota, pontos):
     """
     Calcula o custo total de uma rota específica, começando e terminando no ponto 'R'.
-
-    rota é uma tupla com os pontos da rota, ex: A, B, D, C
+    rota é uma tupla com os pontos da rota, ex: A, B, C, D
     pontos é um dicionário que mapeia o nome de cada ponto às suas coordenadas, ex: R: (3, 0), A: (1, 1)...
     """
+    
     # Ponto de origem e retorno 
     ponto_r = pontos['R']
     custo_total = 0
@@ -44,14 +43,12 @@ def calcularCustoTotalDaRota(rota, pontos):
 
     return custo_total
 
-def otimizarRota(pontos, melhores_rotas=False):
+def otimizarRota(pontos, mostrar_todas=False):
     """
-    parte mais importante
-    
     Encontra a rota de menor custo possível que visita todos os pontos de entrega. [cite: 11]
     Utiliza uma abordagem de força bruta, testando todas as permutações possíveis.
     """
-    # 1. Isola os pontos de entrega (todos exceto 'R')
+    # Isola os pontos de entrega (todos exceto 'R')
     pontos_de_entrega = []
 
     for p in pontos:
@@ -64,28 +61,45 @@ def otimizarRota(pontos, melhores_rotas=False):
 
     # Gera todas as sequências (permutações) possíveis para os pontos de entrega
     rotas_possiveis = list(permutations(pontos_de_entrega))
-    
-    melhor_rota = None
-    menor_custo = float('inf')  # 'inf' representa um número infinito
-    contador_de_melhores_rotas = 0
+    resultados= [] #lista com (rota,custo)
 
+    # Calcula o custo de cada rota possível
     for rota_atual in rotas_possiveis:
         # Calcula o custo da rota que está sendo verificada
         custo_da_rota_atual = calcularCustoTotalDaRota(rota_atual, pontos)
+        resultados.append((rota_atual,custo_da_rota_atual))
 
-        # Se o custo desta rota for menor que o menor custo já registrado,
-        # ela se torna a nova melhor rota.
-        if custo_da_rota_atual < menor_custo:
-            menor_custo = custo_da_rota_atual
-            melhor_rota = rota_atual
-
-            contador_de_melhores_rotas += 1
-            if melhores_rotas: # se o parâmetro for passado na chamada de função
-                melhor_rota_formatada = " ".join(melhor_rota)
-                print(f"{contador_de_melhores_rotas}ª atualização da melhor rota: {melhor_rota_formatada}; "
-                      f"Custo total: {custo_da_rota_atual}")
-            
-    # Formata a melhor rota encontrada em uma string para exibição
-    resultado_formatado = " ".join(melhor_rota)
+    # Ordena da menor para a maior distância (custo)
+    resultados.sort(key=lambda x: x[1])
     
-    return resultado_formatado, menor_custo
+    # Exibe todas as rotas avaliadas (caso ativado)
+    if mostrar_todas:
+        print("\nRotas avaliadas e seus custos:\n")
+        for i, (rota, custo) in enumerate(resultados, start=1):
+            rota_formatada = " -> ".join(rota)
+            print(f"{i:>2}. {rota_formatada} | Custo total: {custo}")
+        print()
+
+    # Guarda melhor e pior rota
+    melhor_rota, melhor_custo = resultados[0]
+    pior_rota, pior_custo = resultados[-1]
+
+    melhor_formatada = " -> ".join(melhor_rota)
+    pior_formatada = " -> ".join(pior_rota)
+    return melhor_formatada, melhor_custo, pior_formatada, pior_custo
+
+
+# Teste de verificação
+if __name__ == "__main__":
+
+    exemplo_pontos = {
+        "R": (3, 0),
+        "A": (1, 1),
+        "B": (3, 2),
+        "C": (2, 4),
+        "D": (0, 4),
+    }
+
+    melhor, melhor_custo, pior, pior_custo = otimizarRota(exemplo_pontos, mostrar_todas=True)
+    print("\nMelhor rota:", melhor, "| Custo:", melhor_custo)
+    print("Pior rota:", pior, "| Custo:", pior_custo)

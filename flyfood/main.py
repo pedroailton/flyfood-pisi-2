@@ -4,40 +4,56 @@ import time
 from parser import parseArquivo
 from otimizador import otimizarRota
 
-def main(cronometro=False, melhores_rotas=False):  
+def main(cronometro=False, mostrar_todas=False):  
+    """
+    Função principal do programa FlyFood.
+    Controla o fluxo geral: leitura do arquivo de entrada,
+    execução do algoritmo de otimização e exibição dos resultados.
+    """
+    
     print("\n::: Otimizador de Rotas FlyFood :::")
     caminho = input("Digite o caminho para o arquivo da matriz: ")
 
     try:
+        # Se cronômetro ativado, inicia a contagem de tempo
         if cronometro:
             tempo_inicial = time.perf_counter() # inicia contador
 
+        # Lê e interpreta o arquivo com o mapa e os pontos
         pontos_mapeados = parseArquivo(caminho)
         print("\nInformações do arquivo:")
         print(f"  Número de linhas: {pontos_mapeados['num_linhas']}")
         print(f"  Número de colunas: {pontos_mapeados['num_colunas']}")
 
+        # Exibe a matriz carregada
         print("\nMatriz:")
         for linha in pontos_mapeados['matriz']:
             print("  " + " ".join(linha))
 
+        # Exibe os pontos encontrados (origem e entregas)
         print("\nPontos mapeados:")
         for ponto, coord in pontos_mapeados['pontos'].items():
             print(f"  - {ponto}: {coord}")
         print()
 
-        melhor_rota, custo_total = otimizarRota(pontos_mapeados["pontos"], melhores_rotas)
-        # pior_rota: parâmetro para a função retornar também a pior rota
-        # melhores_rotas: parâmetro para função printar a melhor rota sempre que ela for atualizada
+        # A função retorna uma tupla com 4 elementos: (melhor_rota, melhor_custo, pior_rota, pior_custo)
+        resultado = otimizarRota(pontos_mapeados["pontos"], mostrar_todas)
+        melhor_rota, melhor_custo, pior_rota, pior_custo = resultado
 
         if cronometro:
-            tempo_final = time.perf_counter() # finaliza o contador
-            print(f"\nTempo de execução: {(tempo_final - tempo_inicial):.4f} segundos")
+            tempo_final = time.perf_counter()
+            duracao = tempo_final - tempo_inicial
+        else:
+            duracao = 0
 
-        print("\nCalculando rota...")
+        # Exibe os resultados finais
         print("\n-------------------------------------")
-        print(f"A melhor rota encontrada é: {melhor_rota}")
-        print(f"Custo total: {custo_total} dronômetros")
+        print(f"Melhor rota encontrada: R -> {melhor_rota} -> R")
+        print(f"Custo total: {melhor_custo} dronômetros")
+        print(f"\nPior rota encontrada:   R -> {pior_rota} -> R")
+        print(f"Custo total: {pior_custo} dronômetros")
+        if cronometro:
+            print(f"\nTempo total de execução: {duracao:.4f} segundos")
         print("-------------------------------------")
 
     except FileNotFoundError:
@@ -45,5 +61,7 @@ def main(cronometro=False, melhores_rotas=False):
     except Exception as e:
         print(f"Ocorreu um erro inesperado: {e}")
 
+
+# Executa o programa com cronômetro e exibição de todas as rotas
 if __name__ == "__main__":
-    main(cronometro=True, melhores_rotas=True)
+    main(cronometro=True, mostrar_todas=True)
