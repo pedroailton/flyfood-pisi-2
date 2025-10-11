@@ -84,8 +84,10 @@ def otimizarRota(pontos, mostrar_atualizacoes=False):
 
 def otimizarRotaPlus(pontos, mostrar_todas=False):
     """
-    Encontra a rota de menor custo possível que visita todos os pontos de entrega. [cite: 11]
+    Encontra a rota de menor custo possível que visita todos os pontos de entrega.
     Utiliza uma abordagem de força bruta, testando todas as permutações possíveis.
+    Calcula também a rota de maior custo possível
+    E também imprime no terminal novas rotas conforme elas forem se atualizando
     """
     
     # Isola os pontos de entrega (todos exceto 'R')
