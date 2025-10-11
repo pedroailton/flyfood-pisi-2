@@ -4,7 +4,7 @@ import time
 from parser import parseArquivo
 from otimizador import otimizarRota, otimizarRotaPlus
 
-def main(cronometro=False, mostrar_todas=False):  
+def main(cronometro=False):  
     """
     Função principal do programa FlyFood.
     Controla o fluxo geral: leitura do arquivo de entrada,
