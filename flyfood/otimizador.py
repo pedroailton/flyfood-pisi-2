@@ -43,11 +43,51 @@ def calcularCustoTotalDaRota(rota, pontos):
 
     return custo_total
 
-def otimizarRota(pontos, mostrar_todas=False):
+# Versão padrão (fast)
+def otimizarRota(pontos, mostrar_atualizacoes=False):
+    """
+    Modo rápido: percorre todas as rotas sem armazená-las e sem rastrear a pior rota.
+    Retorna apenas (melhor_rota_formatada, melhor_custo).
+    """
+    
+    # Isola os pontos de entrega (exceto 'R')
+    pontos_de_entrega = []
+
+    for p in pontos:
+        if p != 'R':  # verifica se o elemento não é 'R'
+            pontos_de_entrega.append(p)
+    
+    # Se não houver pontos de entrega, retorna uma mensagem
+    if not pontos_de_entrega:
+        return "Nenhum ponto de entrega foi especificado."
+    
+    melhor_rota = None
+    melhor_custo = float('inf')
+    contador = 0
+
+    # Calcula o custo de cada rota possível
+    for rota_atual in permutations(pontos_de_entrega):
+        # Calcula o custo da rota que está sendo verificada
+        custo_da_rota_atual = calcularCustoTotalDaRota(rota_atual, pontos)
+       
+        if custo_da_rota_atual < melhor_custo:
+            melhor_custo = custo_da_rota_atual
+            melhor_rota = rota_atual
+            contador += 1
+            if mostrar_atualizacoes:
+                print(f"{contador}ª atualização: {' -> '.join(rota_atual)} | Custo: {custo_da_rota_atual}")
+        
+
+
+    melhor_formatada = " -> ".join(melhor_rota)
+    return melhor_formatada, melhor_custo
+
+def otimizarRotaPlus(pontos, mostrar_todas=False):
     """
     Encontra a rota de menor custo possível que visita todos os pontos de entrega. [cite: 11]
     Utiliza uma abordagem de força bruta, testando todas as permutações possíveis.
     """
+    
     # Isola os pontos de entrega (todos exceto 'R')
     pontos_de_entrega = []
 
@@ -60,11 +100,10 @@ def otimizarRota(pontos, mostrar_todas=False):
         return "Nenhum ponto de entrega foi especificado."
 
     # Gera todas as sequências (permutações) possíveis para os pontos de entrega
-    rotas_possiveis = list(permutations(pontos_de_entrega))
     resultados= [] #lista com (rota,custo)
 
     # Calcula o custo de cada rota possível
-    for rota_atual in rotas_possiveis:
+    for rota_atual in permutations(pontos_de_entrega):
         # Calcula o custo da rota que está sendo verificada
         custo_da_rota_atual = calcularCustoTotalDaRota(rota_atual, pontos)
         resultados.append((rota_atual,custo_da_rota_atual))
@@ -91,7 +130,6 @@ def otimizarRota(pontos, mostrar_todas=False):
 
 # Teste de verificação
 if __name__ == "__main__":
-
     exemplo_pontos = {
         "R": (3, 0),
         "A": (1, 1),
@@ -100,6 +138,11 @@ if __name__ == "__main__":
         "D": (0, 4),
     }
 
-    melhor, melhor_custo, pior, pior_custo = otimizarRota(exemplo_pontos, mostrar_todas=True)
-    print("\nMelhor rota:", melhor, "| Custo:", melhor_custo)
-    print("Pior rota:", pior, "| Custo:", pior_custo)
+    print("\n=== MODO RÁPIDO ===")
+    melhor, mc = otimizarRota(exemplo_pontos, mostrar_atualizacoes=True)
+    print(f"\nMelhor rota: {melhor} | Custo: {mc}")
+
+    print("\n=== MODO COMPLETO ===")
+    melhor, mc, pior, pc = otimizarRotaPlus(exemplo_pontos, mostrar_todas=True)
+    print(f"\nMelhor rota: {melhor} | Custo: {mc}")
+    print(f"Pior rota: {pior} | Custo: {pc}")
