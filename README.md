@@ -9,7 +9,7 @@
 
 <p>O programa Flyfood é uma ferramenta de linha de comando que fornece ao usuário a rota mais rápida para as entregas dos drones da empresa FlyFood dada uma matriz como entrada em arquivo .txt que configura o mapa da região de entrega.</p>
 
-<img src="imagens/Logo FlyFood.png" width="250" height="250" alt="Demonstração do projeto">
+<img src="1VA/assets/imagens/Logo FlyFood.png" width="250" height="250" alt="Demonstração do projeto">
 
 <h2>Formato da Entrada</h2>
 
@@ -34,19 +34,19 @@ R 0 B 0 0
 <h2>Ferramentas Utilizadas</h2>
 <table>
     <tr>
-        <td><img src="imagens/logo-python.png" alt="Logo do Python" width="25"> Python 3</td>
+        <td><img src="1VA/assets/imagens/logo-python.png" alt="Logo do Python" width="25"> Python 3</td>
         <td>Linguagem de programação</td>
     </tr>
     <tr>
-        <td><img src="imagens/logo-vscode.png" alt="Logo do VSCode" width="25"> VSCode</td>
+        <td><img src="1VA/assets/imagens/logo-vscode.png" alt="Logo do VSCode" width="25"> VSCode</td>
         <td>IDE de desenvolvimento do código-fonte</td>
     </tr>
     <tr>
-        <td><img src="imagens/logo-git.png" alt="Logo do Git" width="25"> Git</td>
+        <td><img src="1VA/assets/imagens/logo-git.png" alt="Logo do Git" width="25"> Git</td>
         <td>Versionamento de código</td>
     </tr>
     <tr>
-        <td><img src="imagens/logo-github.png" alt="Logo do GitHub" width="25"> GitHub</td>
+        <td><img src="1VA/assets/imagens/logo-github.png" alt="Logo do GitHub" width="25"> GitHub</td>
         <td>Repositório e cooperação no desenvolvimento</td>
     </tr>
 </table>
