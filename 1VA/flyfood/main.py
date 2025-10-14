@@ -79,7 +79,7 @@ def main(cronometro=False):
         if cronometro:
             print()
             # AQUI: Exibimos a duração correta, que agora mede apenas o algoritmo
-            print(f"Tempo de execução do ALGORITMO: {duracao_algoritmo:.4f} segundos")
+            print(f"Tempo de execução do algoritmo: {duracao_algoritmo:.4f} segundos")
         print("-------------------------------------")
 
     except FileNotFoundError:
