@@ -78,13 +78,8 @@ def main(cronometro=False):
 
         if cronometro:
             print()
-<<<<<<< Updated upstream
             # AQUI: Exibimos a duração correta, que agora mede apenas o algoritmo
             print(f"Tempo de execução do algoritmo: {duracao_algoritmo:.4f} segundos")
-=======
-            # AQUI: Exibimos a duração,caso o parâmetro cronometro seja passado
-            print(f"Tempo de execução do ALGORITMO: {duracao_algoritmo:.4f} segundos")
->>>>>>> Stashed changes
         print("-------------------------------------")
 
     except FileNotFoundError:
