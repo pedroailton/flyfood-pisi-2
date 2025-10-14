@@ -1,8 +1,8 @@
 # Para medição de tempo de execução do programa
 import time
 
-from .parser import parseArquivo
-from .otimizador import otimizarRota, otimizarRotaPlus
+from parser import parseArquivo
+from otimizador import otimizarRota, otimizarRotaPlus
 
 def main(cronometro=False):  
     """
