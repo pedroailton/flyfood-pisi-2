@@ -2,7 +2,9 @@
 from itertools import permutations
 
 def extrairPontos(pontos):
-    """Funçãozinha auxiliar que filtra e retorna a lista de pontos de entrega (menos o R)."""
+    """
+    Função auxiliar que filtra e retorna a lista de pontos de entrega (menos o R).
+    """
     lista_de_pontos = []
     for p in pontos:
         if p != 'R':
@@ -12,7 +14,8 @@ def extrairPontos(pontos):
 def calcularDistancia(ponto_a, ponto_b):
     """
     Calcula a distância de Manhattan entre dois pontos em uma grade.
-    ponto_a e b são tuplas com as posições dos 2 pontos"""
+    ponto_a e ponto_b são tuplas com as posições dos 2 pontos.
+    """
     
     # Desempacota as tuplas
     linha1, coluna1 = ponto_a
@@ -21,7 +24,7 @@ def calcularDistancia(ponto_a, ponto_b):
     # Calcula a distância de Manhattan: |x2 - x1| + |y2 - y1|
     distancia = abs(linha2 - linha1) + abs(coluna2 - coluna1)
     
-    #retorna distancia de a e b
+    #retorna distancia de Manhattam entre a e b
     return distancia
 
 def calcularCustoTotalDaRota(rota, pontos):
@@ -65,7 +68,6 @@ def otimizarRota(pontos, mostrar_atualizacoes=False):
     # Chama a função auxiliar pra extrair pontos
     pontos_de_entrega = extrairPontos(pontos)
 
-    
     # Se não houver pontos de entrega, retorna uma mensagem
     if not pontos_de_entrega:
         return "Nenhum ponto de entrega foi especificado."
@@ -109,18 +111,17 @@ def otimizarRotaPlus(pontos, mostrar_todas=False):
     if not pontos_de_entrega:
         return "Nenhum ponto de entrega foi especificado."
 
-    # Gera todas as sequências (permutações) possíveis para os pontos de entrega
-    resultados= [] #lista com (rota,custo)
-    total = 0
+    resultados= [] # lista com (rota,custo) de todas as permutações
+    total = 0 # variável que vai guardar o total das distâncias para cálculo da média
+
     # Calcula o custo de cada rota possível
     for rota_atual in permutations(pontos_de_entrega):
-        # Calcula o custo da rota que está sendo verificada
         custo_da_rota_atual = calcularCustoTotalDaRota(rota_atual, pontos)
         resultados.append((rota_atual,custo_da_rota_atual))
         total += custo_da_rota_atual
     # Ordena da menor para a maior distância (custo)
     resultados.sort(key=lambda x: x[1])
-    media = total/len(resultados)
+    media = total/len(resultados) # Cálculo da média dos resultados
     # Exibe todas as rotas avaliadas (caso ativado)
     if mostrar_todas:
         print("\nRotas avaliadas e seus custos:\n")

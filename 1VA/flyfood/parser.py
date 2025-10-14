@@ -25,7 +25,7 @@ def lerArquivo(caminho_arquivo):
             for linha in arq:
                 linhas.append(linha.strip())
                 
-    return linhas
+    return linhas # retorno da lista de linhas
 
 def parseArquivo(caminho_arquivo):
     """
@@ -56,7 +56,6 @@ def parseArquivo(caminho_arquivo):
         "matriz": matriz,
         "pontos": pontos
     }
-    
     
 # Teste de verificação individual do arquivo
 if __name__ == "__main__":

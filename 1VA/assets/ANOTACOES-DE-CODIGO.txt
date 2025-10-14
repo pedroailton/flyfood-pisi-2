@@ -121,14 +121,17 @@
   }
   Com essa estrutura, fica muito fácil usar os dados depois. Por exemplo, para pegar as coordenadas do ponto 'B', você faria dados['pontos']['B'], que retornaria (2, 1).
 
-
-
 # Arquivo otimizador.py (de Felipe)
 
   ## Explicando a função calcularDistancia():
-  
-  ## Explicando a função calcularCustoTotalDaRota():
+    A partir de duas tuplas, com as posições do dois pontos a terem sua distância de Manhattam calculada, o programa separa a linha e a coluna de cada um.
 
+    O programa aplica o cálculo da distância de Manhattam, através da diferença absoluta do valor dos eixos x e y, e sua soma.
+
+    Essa soma, guardada na variável distancia é retornada pela função
+
+  ## Explicando a função calcularCustoTotalDaRota():
+    
   ## Explicando a função otimizarRota():
        
     A estratégia da função é exatamente essa:
