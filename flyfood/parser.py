@@ -1,3 +1,5 @@
+import csv
+
 def lerArquivo(caminho_arquivo):
     """
     Lê o conteúdo de um arquivo de texto (.txt) ou CSV (.csv) e
@@ -7,7 +9,7 @@ def lerArquivo(caminho_arquivo):
 
     # detecta a extensão do arquivo
     if caminho_arquivo.lower().endswith(".csv"):
-        import csv
+
         with open(caminho_arquivo, "r", encoding="utf-8") as arq:
             leitor = csv.reader(arq)
             # cada linha do CSV vira uma string separada por espaço
@@ -56,7 +58,7 @@ def parseArquivo(caminho_arquivo):
     }
     
     
-# Teste de verificação
+# Teste de verificação individual do arquivo
 if __name__ == "__main__":
     resultado = parseArquivo("flyfood-pisi-2/flyfood/entrada.txt")
     print("Dimensões:", resultado["num_linhas"], "x", resultado["num_colunas"])

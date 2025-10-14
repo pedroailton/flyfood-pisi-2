@@ -1,4 +1,9 @@
+# Para fazer todas as combinações de pontos possíveis para os pontos na matriz
 from itertools import permutations
+
+def extrairPontos(pontos):
+    """Funçãozinha auxiliar que filtra e retorna a lista de pontos de entrega (menos o R)."""
+    return [p for p in pontos if p != 'R']
 
 def calcularDistancia(ponto_a, ponto_b):
     """
@@ -49,13 +54,13 @@ def otimizarRota(pontos, mostrar_atualizacoes=False):
     Modo rápido: percorre todas as rotas sem armazená-las e sem rastrear a pior rota.
     Retorna apenas (melhor_rota_formatada, melhor_custo).
     """
+    if 'R' not in pontos:
+        # Retorna um formato que não quebre o programa principal
+        return "ERRO: Ponto de partida 'R' não encontrado no mapa.", 0
     
-    # Isola os pontos de entrega (exceto 'R')
-    pontos_de_entrega = []
+    # Chama a função auxiliar pra extrair pontos
+    pontos_de_entrega = extrairPontos(pontos)
 
-    for p in pontos:
-        if p != 'R':  # verifica se o elemento não é 'R'
-            pontos_de_entrega.append(p)
     
     # Se não houver pontos de entrega, retorna uma mensagem
     if not pontos_de_entrega:
@@ -87,38 +92,37 @@ def otimizarRotaPlus(pontos, mostrar_todas=False):
     Encontra a rota de menor custo possível que visita todos os pontos de entrega. [cite: 11]
     Utiliza uma abordagem de força bruta, testando todas as permutações possíveis.
     """
+    if 'R' not in pontos:
+        # Retorna um formato que não quebre o programa principal
+        return "ERRO: Ponto de partida 'R' não encontrado no mapa.", 0
     
-    # Isola os pontos de entrega (todos exceto 'R')
-    pontos_de_entrega = []
+    # Chama função que isola pontos
+    pontos_de_entrega = extrairPontos(pontos)
 
-    for p in pontos:
-        if p != 'R':  # verifica se o elemento não é 'R'
-            pontos_de_entrega.append(p)
-    
     # Se não houver pontos de entrega, retorna uma mensagem
     if not pontos_de_entrega:
         return "Nenhum ponto de entrega foi especificado."
 
     # Gera todas as sequências (permutações) possíveis para os pontos de entrega
     resultados= [] #lista com (rota,custo)
-
+    total = 0
     # Calcula o custo de cada rota possível
     for rota_atual in permutations(pontos_de_entrega):
         # Calcula o custo da rota que está sendo verificada
         custo_da_rota_atual = calcularCustoTotalDaRota(rota_atual, pontos)
         resultados.append((rota_atual,custo_da_rota_atual))
-
+        total += custo_da_rota_atual
     # Ordena da menor para a maior distância (custo)
     resultados.sort(key=lambda x: x[1])
-    
+    media = total/len(resultados)
     # Exibe todas as rotas avaliadas (caso ativado)
     if mostrar_todas:
         print("\nRotas avaliadas e seus custos:\n")
         for i, (rota, custo) in enumerate(resultados, start=1):
             rota_formatada = " -> ".join(rota)
-            print(f"{i:>2}. {rota_formatada} | Custo total: {custo}")
+            print(f"{i:>2}. {rota_formatada} | Custo total: {custo}.")
+        print(f'Custo médio: {media} dronômetros')
         print()
-
     # Guarda melhor e pior rota
     melhor_rota, melhor_custo = resultados[0]
     pior_rota, pior_custo = resultados[-1]
@@ -128,7 +132,7 @@ def otimizarRotaPlus(pontos, mostrar_todas=False):
     return melhor_formatada, melhor_custo, pior_formatada, pior_custo
 
 
-# Teste de verificação
+# Teste de verificação individual do arquivo
 if __name__ == "__main__":
     exemplo_pontos = {
         "R": (3, 0),
