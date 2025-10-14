@@ -31,7 +31,7 @@ def main(cronometro=False):
 
         print("\nMatriz:")
         for linha in pontos_mapeados["matriz"]:
-            print("  " + " ".join(linha))
+            print("  " + " ".join(linha)) # Recuo mais junção por espaço (string)
 
         print("\nPontos mapeados:")
         for ponto, coord in pontos_mapeados["pontos"].items():
@@ -40,10 +40,10 @@ def main(cronometro=False):
 
         print("Iniciando o cálculo da rota ótima...")
 
-        # --- ETAPA 2: Execução do Algoritmo (Dentro do Cronômetro) ---
+        # --- ETAPA 2: Execução do Algoritmo ---
         duracao_algoritmo = 0
         if cronometro:
-            # AQUI: Iniciamos o cronômetro APENAS para o bloco do algoritmo
+            # AQUI: Iniciamos o cronômetro
             tempo_inicial_algoritmo = time.perf_counter()
 
         if modo == "plus":
@@ -78,8 +78,13 @@ def main(cronometro=False):
 
         if cronometro:
             print()
+<<<<<<< Updated upstream
             # AQUI: Exibimos a duração correta, que agora mede apenas o algoritmo
             print(f"Tempo de execução do algoritmo: {duracao_algoritmo:.4f} segundos")
+=======
+            # AQUI: Exibimos a duração,caso o parâmetro cronometro seja passado
+            print(f"Tempo de execução do ALGORITMO: {duracao_algoritmo:.4f} segundos")
+>>>>>>> Stashed changes
         print("-------------------------------------")
 
     except FileNotFoundError:
