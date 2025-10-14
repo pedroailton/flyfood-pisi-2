@@ -78,4 +78,7 @@ R 0 B 0 0
 <p>Após a execução, o programa solicitará o caminho para o arquivo de entrada (ex: <code>entrada.txt</code>).</p>
 
 <h2>Próximos Passos</h2>
-<p>Conversão para uma aplicação web com HTML, CSS e JavaScript.</p>
+<ol> 
+    <li>Aplicação de Heurística no algoritmo para escolha da rota satisfatória</li>
+    <li>Conversão para uma aplicação web completa com HTML, CSS, JavaScript (Front-End) API RESTful e Python.</li>
+</ol>
