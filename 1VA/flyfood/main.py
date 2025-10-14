@@ -68,12 +68,12 @@ def main(cronometro=False):
         print("\nCálculo finalizado. Apresentando resultados...")
 
         print("\n-------------------------------------")
-        print(f"Melhor rota encontrada: R -> {melhor_rota} -> R")
+        print(f"Melhor rota encontrada: {melhor_rota}")
         print(f"Custo total: {melhor_custo} dronômetros")
 
         if pior_rota is not None:
             print()
-            print(f"Pior rota encontrada:   R -> {pior_rota} -> R")
+            print(f"Pior rota encontrada: {pior_rota}")
             print(f"Custo total: {pior_custo} dronômetros")
 
         if cronometro:

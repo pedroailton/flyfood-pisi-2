@@ -3,7 +3,11 @@ from itertools import permutations
 
 def extrairPontos(pontos):
     """Funçãozinha auxiliar que filtra e retorna a lista de pontos de entrega (menos o R)."""
-    return [p for p in pontos if p != 'R']
+    lista_de_pontos = []
+    for p in pontos:
+        if p != 'R':
+            lista_de_pontos.append(p)
+    return lista_de_pontos
 
 def calcularDistancia(ponto_a, ponto_b):
     """
