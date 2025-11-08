@@ -2,6 +2,7 @@
 import time
 
 from parser import parseArquivo
+from converter import converterGridParaUpperRow
 from otimizador import otimizarRota, otimizarRotaPlus
 
 def main(cronometro=False):  
@@ -13,6 +14,22 @@ def main(cronometro=False):
     print("\n::: Otimizador de Rotas FlyFood :::")
     caminho = input("Digite o caminho para o arquivo da matriz: ")
 
+    # Conversor TSLIB
+    try:
+        modo_conv = input("Deseja converter este arquivo para formato TSPLIB-like (s/n)? ").strip().lower()
+        if modo_conv == "s":
+            dados = parseArquivo(caminho)
+            dados["origem"] = caminho  # nomea o arquivo de saída
+            converterGridParaUpperRow(dados)
+            print("Conversão concluída. Encerrando.\n")
+            return  # encerra aqui. Por enquanto não roda o algoritmo - estamos decidindo
+    except FileNotFoundError:
+        print(f"Erro: O arquivo '{caminho}' não foi encontrado.")
+        return
+    except Exception as e:
+        print(f"Ocorreu um erro inesperado na conversão: {e}")
+        return
+    
     modo = ""
     # Loop para evitar quebra se o usuário digitar errado
     while modo not in ["fast", "plus"]:
