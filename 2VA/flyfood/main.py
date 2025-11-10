@@ -1,7 +1,7 @@
 # Para medição de tempo de execução do programa
 import time
 
-from parser import parseArquivo
+from parser import parseArquivoMatriz, parseArquivoTsplib
 from converter import converterGridParaUpperRow
 from otimizador import otimizarRota, otimizarRotaPlus
 
@@ -18,7 +18,7 @@ def main(cronometro=False):
     try:
         modo_conv = input("Deseja converter este arquivo para formato TSPLIB-like (s/n)? ").strip().lower()
         if modo_conv == "s":
-            dados = parseArquivo(caminho)
+            dados = parseArquivoMatriz(caminho)
             dados["origem"] = caminho  # nomea o arquivo de saída
             converterGridParaUpperRow(dados)
             print("Conversão concluída. Encerrando.\n")
@@ -39,16 +39,11 @@ def main(cronometro=False):
 
     try:
         # --- ETAPA 1: Leitura e Exibição ---
-        pontos_mapeados = parseArquivo(caminho)
+        pontos_mapeados, qtd_elementos = parseArquivoTsplib(caminho)
 
         print("\nAnalisando o arquivo e mapeando os pontos...")
         print("\nInformações do arquivo:")
-        print(f"  Número de linhas: {pontos_mapeados['num_linhas']}")
-        print(f"  Número de colunas: {pontos_mapeados['num_colunas']}")
-
-        print("\nMatriz:")
-        for linha in pontos_mapeados["matriz"]:
-            print("  " + " ".join(linha)) # Recuo mais junção por espaço (string)
+        print(f"  Número de elementos no arquivo: {qtd_elementos}")
 
         print("\nPontos mapeados:")
         for ponto, coord in pontos_mapeados["pontos"].items():

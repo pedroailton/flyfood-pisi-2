@@ -1,33 +1,51 @@
-import csv
-
 def lerArquivo(caminho_arquivo):
     """
-    Lê o conteúdo de um arquivo de texto (.txt) ou CSV (.csv) e
-    retorna uma lista de linhas que representam a matriz do mapa.
+    Lê o conteúdo de um arquivo de texto (.txt) e
+    retorna uma lista de linhas.
     """
+
     linhas = []
 
-    # detecta a extensão do arquivo
-    if caminho_arquivo.lower().endswith(".csv"):
-
-        with open(caminho_arquivo, "r", encoding="utf-8") as arq:
-            leitor = csv.reader(arq)
-            # cada linha do CSV vira uma string separada por espaço
-            for linha in leitor:
-                celulas_processadas = []
-                for celula in linha:
-                    celulas_processadas.append(celula.strip())
-                linha_unida = " ".join(celulas_processadas)  # junta as células em uma única string separadas por espaço
-                linhas.append(linha_unida)
-    else:
-        # Leitura padrão para arquivos .txt
-        with open(caminho_arquivo, "r", encoding="utf-8") as arq:
-            for linha in arq:
-                linhas.append(linha.strip())
+    with open(caminho_arquivo, "r", encoding="utf-8") as arq:
+        for linha in arq:
+            linhas.append(linha.strip())
                 
-    return linhas # retorno da lista de linhas
+    return linhas
 
-def parseArquivo(caminho_arquivo):
+def parseArquivoTsplib(caminho_arquivo):
+    """
+    Processa o arquivo de entrada e constrói a estrutura de dados principal do programa.
+    Retorna as dimensões da matriz, o conteúdo do mapa e as coordenadas dos pontos de interesse.
+    """
+    linhas = lerArquivo(caminho_arquivo)
+
+    # Identifica os pontos de entrega 
+    distancias = {}
+
+    # Verifica a quantidade de elementos a partir dos elementos presentes na primeira linha do arquivo
+    elementos_primeira_linha = linhas[0].split(" ")
+    qtd_elementos = len(elementos_primeira_linha)
+
+    # Loop de varredura das linhas(i)
+    for i in range(0, qtd_elementos-1): # primeira linha -> (quantidade de elementos - 1) pois a última linha nao terá aresta para si própria
+
+        # lista com os elementos da i-ésima linha
+        lista = linhas[i-1].split() # obs: não int ainda
+
+        # Loop de varredura das colunas(j), que começa a partir de i+1 (já que não há distância de i para i)
+        for j in range(i+1, qtd_elementos): #colunas i+1 -> quantidade de elementos
+            if len(lista) > 0:
+                peso = int(lista.pop(0))
+            else:
+                print(f"Erro! linha {i} do arquivo não possui elementos suficientes")
+                exit()
+            #gravando a aresta em (i, j) e (j, i), dada a simetria das distâncias:
+            distancias[(i,j)] = peso
+            distancias[(j,i)] = peso
+
+    return distancias, qtd_elementos
+
+def parseArquivoMatriz(caminho_arquivo):
     """
     Processa o arquivo de entrada e constrói a estrutura de dados principal do programa.
     Retorna as dimensões da matriz, o conteúdo do mapa e as coordenadas dos pontos de interesse.
@@ -56,12 +74,3 @@ def parseArquivo(caminho_arquivo):
         "matriz": matriz,
         "pontos": pontos
     }
-    
-# Teste de verificação individual do arquivo
-if __name__ == "__main__":
-    resultado = parseArquivo("flyfood-pisi-2/flyfood/entrada.txt")
-    print("Dimensões:", resultado["num_linhas"], "x", resultado["num_colunas"])
-    print("Matriz:")
-    for linha in resultado["matriz"]:
-        print(linha)
-    print("Pontos:", resultado["pontos"])
