@@ -15,7 +15,8 @@ def lerArquivo(caminho_arquivo):
 def parseArquivoTsplib(caminho_arquivo):
     """
     Processa o arquivo de entrada e constrói a estrutura de dados principal do programa.
-    Retorna as dimensões da matriz, o conteúdo do mapa e as coordenadas dos pontos de interesse.
+    Retorna o dicionário "distancias" com a chave sendo os dois pontos considerados, sequencialmente, e o valor sendo a distância;
+    E retorna a variável "qtd_pontos" com a quantidade de pontos presente no documento (desconsiderando "R")
     """
     linhas = lerArquivo(caminho_arquivo)
 
@@ -43,7 +44,9 @@ def parseArquivoTsplib(caminho_arquivo):
             distancias[(i,j)] = peso
             distancias[(j,i)] = peso
 
-    return distancias, qtd_elementos
+    qtd_pontos = qtd_elementos - 1 # desconsidera o ponto "R" para posterior print da quantidade de elementos.
+
+    return distancias, qtd_pontos
 
 def parseArquivoMatriz(caminho_arquivo):
     """

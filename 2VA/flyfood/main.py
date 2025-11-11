@@ -39,18 +39,14 @@ def main(cronometro=False):
 
     try:
         # --- ETAPA 1: Leitura e Exibição ---
-        pontos_mapeados, qtd_elementos = parseArquivoTsplib(caminho)
+        pontos_mapeados, qtd_pontos = parseArquivoTsplib(caminho)
 
-        print("\nAnalisando o arquivo e mapeando os pontos...")
+        print("\nAnalisando o arquivo...")
         print("\nInformações do arquivo:")
-        print(f"  Número de elementos no arquivo: {qtd_elementos}")
+        print(f"\nNúmero de elementos no arquivo: {qtd_pontos}")
+        # Talvez seja interessante colocar outros dados que gerem insights aqui
 
-        print("\nPontos mapeados:")
-        for ponto, coord in pontos_mapeados["pontos"].items():
-            print(f"  - {ponto}: {coord}")
-        print()
-
-        print("Iniciando o cálculo da rota ótima...")
+        print("\nIniciando o cálculo da rota ótima...")
 
         # --- ETAPA 2: Execução do Algoritmo ---
         duracao_algoritmo = 0
