@@ -1,5 +1,7 @@
 # Para medição de tempo de execução do programa
 import time
+import pandas as pd
+import matplotlib as plt
 
 from parser import parseArquivoMatriz, parseArquivoTsplib
 from converter import converterGridParaUpperRow

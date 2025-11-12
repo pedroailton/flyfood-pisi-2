@@ -31,7 +31,7 @@ def parseArquivoTsplib(caminho_arquivo):
     for i in range(0, qtd_elementos-1): # primeira linha -> (quantidade de elementos - 1) pois a última linha nao terá aresta para si própria
 
         # lista com os elementos da i-ésima linha
-        lista = linhas[i-1].split() # obs: não int ainda
+        lista = linhas[i].split() # obs: não int ainda
 
         # Loop de varredura das colunas(j), que começa a partir de i+1 (já que não há distância de i para i)
         for j in range(i+1, qtd_elementos): #colunas i+1 -> quantidade de elementos
