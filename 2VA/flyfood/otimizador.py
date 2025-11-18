@@ -1,159 +1,83 @@
-# Para fazer todas as combinações de pontos possíveis para os pontos na matriz
-from itertools import permutations
+import random
+from deap import base, creator, tools, algorithms
 
-def extrairPontos(pontos):
+# --- Função de Aptidão (Fitness Function) ---
+def _calcularAptidao(individuo, distancias):
     """
-    Função auxiliar que filtra e retorna a lista de pontos de entrega (menos o R).
+    Função interna para calcular o custo (aptidão).
     """
-    lista_de_pontos = []
-    for p in pontos:
-        if p != 'R':
-            lista_de_pontos.append(p)
-    return lista_de_pontos
-
-def calcularDistancia(ponto_a, ponto_b):
-    """
-    Calcula a distância de Manhattan entre dois pontos em uma grade.
-    ponto_a e ponto_b são tuplas com as posições dos 2 pontos.
-    """
+    # O Ponto 'R' é sempre o índice 0 na matriz
+    pontoR = 0
+    custoTotal = 0
     
-    # Desempacota as tuplas
-    linha1, coluna1 = ponto_a
-    linha2, coluna2 = ponto_b
+    # CORREÇÃO: O AG usa 0..N-1, mas a matriz usa 1..N para os pontos de entrega.
+    # Então somamos +1 em todos os índices vindos do indivíduo.
     
-    # Calcula a distância de Manhattan: |x2 - x1| + |y2 - y1|
-    distancia = abs(linha2 - linha1) + abs(coluna2 - coluna1)
+    # 1. Custo do 'R' (0) até o primeiro ponto
+    primeiroPonto = individuo[0] + 1 
+    custoTotal += distancias[(pontoR, primeiroPonto)]
     
-    #retorna distancia de Manhattam entre a e b
-    return distancia
-
-def calcularCustoTotalDaRota(rota, pontos):
-    """
-    Calcula o custo total de uma rota específica, começando e terminando no ponto 'R'.
-    rota é uma tupla com os pontos da rota, ex: A, B, C, D
-    pontos é um dicionário que mapeia o nome de cada ponto às suas coordenadas, ex: R: (3, 0), A: (1, 1)...
-    """
-    
-    # Ponto de origem e retorno 
-    ponto_r = pontos['R']
-    custo_total = 0
-
-    # 1. Calcula o custo da origem 'R' até o primeiro ponto da rota
-    primeiro_ponto = pontos[rota[0]]
-    custo_total += calcularDistancia(ponto_r, primeiro_ponto)
-
-    # 2. Calcula o custo entre os pontos intermediários da rota
-    # O loop vai do primeiro ponto até o penúltimo
-    for i in range(len(rota) - 1):
-        ponto_atual = pontos[rota[i]]
-        proximo_ponto = pontos[rota[i+1]]
-        custo_total += calcularDistancia(ponto_atual, proximo_ponto)
-
-    # 3. Calcula o custo do último ponto da rota de volta para a origem 'R'
-    ultimo_ponto = pontos[rota[-1]]
-    custo_total += calcularDistancia(ultimo_ponto, ponto_r)
-
-    return custo_total
-
-# Versão padrão (fast)
-def otimizarRota(pontos, mostrar_atualizacoes=False):
-    """
-    Modo rápido: percorre todas as rotas sem armazená-las e sem rastrear a pior rota.
-    Retorna apenas (melhor_rota_formatada, melhor_custo).
-    """
-    if 'R' not in pontos:
-        # Retorna um formato que não quebre o programa principal
-        return "ERRO: Ponto de partida 'R' não encontrado no mapa.", 0
-    
-    # Chama a função auxiliar pra extrair pontos
-    pontos_de_entrega = extrairPontos(pontos)
-
-    # Se não houver pontos de entrega, retorna uma mensagem
-    if not pontos_de_entrega:
-        return "Nenhum ponto de entrega foi especificado."
-    
-    melhor_rota = None
-    melhor_custo = float('inf')
-    contador = 0
-
-    # Calcula o custo de cada rota possível
-    for rota_atual in permutations(pontos_de_entrega):
-        # Calcula o custo da rota que está sendo verificada
-        custo_da_rota_atual = calcularCustoTotalDaRota(rota_atual, pontos)
-       
-        if custo_da_rota_atual < melhor_custo:
-            melhor_custo = custo_da_rota_atual
-            melhor_rota = rota_atual
-            contador += 1
-            if mostrar_atualizacoes:
-                print(f"{contador}ª atualização: {' -> '.join(rota_atual)} | Custo: {custo_da_rota_atual}")
+    # 2. Custo entre os pontos intermediários
+    for i in range(len(individuo) - 1):
+        pontoAtual = individuo[i] + 1
+        proximoPonto = individuo[i+1] + 1
+        custoTotal += distancias[(pontoAtual, proximoPonto)]
         
-
-
-    melhor_formatada = " -> ".join(melhor_rota)
-    return melhor_formatada, melhor_custo
-
-def otimizarRotaPlus(pontos, mostrar_todas=False):
-    """
-    Encontra a rota de menor custo possível que visita todos os pontos de entrega.
-    Utiliza uma abordagem de força bruta, testando todas as permutações possíveis.
-    Calcula também a rota de maior custo possível
-    E também imprime no terminal novas rotas conforme elas forem se atualizando
-    """
-    if 'R' not in pontos:
-        # Retorna um formato que não quebre o programa principal
-        return "ERRO: Ponto de partida 'R' não encontrado no mapa.", 0
+    # 3. Custo do último ponto de volta para o 'R'
+    ultimoPonto = individuo[-1] + 1
+    custoTotal += distancias[(ultimoPonto, pontoR)]
     
-    # Chama função que isola pontos
-    pontos_de_entrega = extrairPontos(pontos)
+    return (custoTotal,)
 
-    # Se não houver pontos de entrega, retorna uma mensagem
-    if not pontos_de_entrega:
-        return "Nenhum ponto de entrega foi especificado."
+# --- Função Principal de Otimização ---
 
-    resultados= [] # lista com (rota,custo) de todas as permutações
-    total = 0 # variável que vai guardar o total das distâncias para cálculo da média
+def otimizarRotaGa(distancias, qtdPontosEntrega, 
+                   tamPopulacao=100, 
+                   numGeracoes=500, 
+                   taxaCrossover=0.8, 
+                   taxaMutacao=0.2):
+    
+    # --- 1. Definição dos Tipos ---
+    # (Verifica se já existe para evitar erro de re-criação no notebook/console)
+    if not hasattr(creator, "FitnessMin"):
+        creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
+    if not hasattr(creator, "Individual"):
+        creator.create("Individual", list, fitness=creator.FitnessMin)
 
-    # Calcula o custo de cada rota possível
-    for rota_atual in permutations(pontos_de_entrega):
-        custo_da_rota_atual = calcularCustoTotalDaRota(rota_atual, pontos)
-        resultados.append((rota_atual,custo_da_rota_atual))
-        total += custo_da_rota_atual
-    # Ordena da menor para a maior distância (custo)
-    resultados.sort(key=lambda x: x[1])
-    media = total/len(resultados) # Cálculo da média dos resultados
-    # Exibe todas as rotas avaliadas (caso ativado)
-    if mostrar_todas:
-        print("\nRotas avaliadas e seus custos:\n")
-        for i, (rota, custo) in enumerate(resultados, start=1):
-            rota_formatada = " -> ".join(rota)
-            print(f"{i:>2}. {rota_formatada} | Custo total: {custo}.")
-        print(f'Custo médio: {media} dronômetros')
-        print()
-    # Guarda melhor e pior rota
-    melhor_rota, melhor_custo = resultados[0]
-    pior_rota, pior_custo = resultados[-1]
+    # --- 2. Configuração da Toolbox ---
+    toolbox = base.Toolbox()
+    
+    # CORREÇÃO: Genes agora vão de 0 até (qtd - 1). 
+    # Ex: se são 4 pontos, índices serão [0, 1, 2, 3]
+    indicesPontos = list(range(qtdPontosEntrega)) 
 
-    melhor_formatada = " -> ".join(melhor_rota)
-    pior_formatada = " -> ".join(pior_rota)
-    return melhor_formatada, melhor_custo, pior_formatada, pior_custo
+    toolbox.register("genes", random.sample, indicesPontos, len(indicesPontos))
+    toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.genes)
+    toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
+    # --- 3. Operadores ---
+    toolbox.register("evaluate", _calcularAptidao, distancias=distancias)
+    toolbox.register("mate", tools.cxOrdered)
+    toolbox.register("mutate", tools.mutShuffleIndexes, indpb=0.05)
+    toolbox.register("select", tools.selTournament, tournsize=3)
 
-# Teste de verificação individual do arquivo
-if __name__ == "__main__":
-    exemplo_pontos = {
-        "R": (3, 0),
-        "A": (1, 1),
-        "B": (3, 2),
-        "C": (2, 4),
-        "D": (0, 4),
-    }
+    # --- 4. Execução ---
+    print(f"\nExecutando AG para {qtdPontosEntrega} pontos:")
+    print(f" População: {tamPopulacao} | Gerações: {numGeracoes}")
+    
+    populacaoInicial = toolbox.population(n=tamPopulacao)
+    hof = tools.HallOfFame(1) 
+    
+    algorithms.eaSimple(populacaoInicial, 
+                        toolbox, 
+                        cxpb=taxaCrossover,
+                        mutpb=taxaMutacao,
+                        ngen=numGeracoes,
+                        halloffame=hof,
+                        verbose=True)
 
-    print("\n=== MODO RÁPIDO ===")
-    melhor, mc = otimizarRota(exemplo_pontos, mostrar_atualizacoes=True)
-    print(f"\nMelhor rota: {melhor} | Custo: {mc}")
+    # --- 5. Retorno ---
+    melhorIndividuoIndices = hof[0]
+    melhorCusto = melhorIndividuoIndices.fitness.values[0]
 
-    print("\n=== MODO COMPLETO ===")
-    melhor, mc, pior, pc = otimizarRotaPlus(exemplo_pontos, mostrar_todas=True)
-    print(f"\nMelhor rota: {melhor} | Custo: {mc}")
-    print(f"Pior rota: {pior} | Custo: {pc}")
+    return melhorIndividuoIndices, melhorCusto
