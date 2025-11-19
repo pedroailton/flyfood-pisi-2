@@ -26,7 +26,7 @@ def _calcularAptidao(individuo, distancias):
     # 3. Custo do último ponto de volta para o 'R'
     ultimoPonto = individuo[-1] + 1
     custoTotal += distancias[(ultimoPonto, pontoR)]
-    
+     
     return (custoTotal,)
 
 # --- Função Principal de Otimização ---
