@@ -6,37 +6,43 @@ def _calcularAptidao(individuo, distancias):
     """
     Função interna para calcular o custo (aptidão).
     """
-    # O Ponto 'R' é sempre o índice 0 na matriz
-    pontoR = 0
-    custoTotal = 0
-    
+    # O ponto 'R' é sempre o índice 0 na matriz
+    ponto_r = 0
+    custo_total = 0
+
     # CORREÇÃO: O AG usa 0..N-1, mas a matriz usa 1..N para os pontos de entrega.
     # Então somamos +1 em todos os índices vindos do indivíduo.
-    
+
     # 1. Custo do 'R' (0) até o primeiro ponto
-    primeiroPonto = individuo[0] + 1 
-    custoTotal += distancias[(pontoR, primeiroPonto)]
-    
+    primeiro_ponto = individuo[0] + 1
+    custo_total += distancias[(ponto_r, primeiro_ponto)]
+
     # 2. Custo entre os pontos intermediários
     for i in range(len(individuo) - 1):
-        pontoAtual = individuo[i] + 1
-        proximoPonto = individuo[i+1] + 1
-        custoTotal += distancias[(pontoAtual, proximoPonto)]
-        
+        ponto_atual = individuo[i] + 1
+        proximo_ponto = individuo[i + 1] + 1
+        custo_total += distancias[(ponto_atual, proximo_ponto)]
+
     # 3. Custo do último ponto de volta para o 'R'
-    ultimoPonto = individuo[-1] + 1
-    custoTotal += distancias[(ultimoPonto, pontoR)]
-     
-    return (custoTotal,)
+    ultimo_ponto = individuo[-1] + 1
+    custo_total += distancias[(ultimo_ponto, ponto_r)]
+
+    return (custo_total,)
+
 
 # --- Função Principal de Otimização ---
+def otimizarRotaGa(
+    distancias,
+    qtd_pontos_entrega,
+    tam_populacao=100,
+    num_geracoes=500,
+    taxa_crossover=0.8,
+    taxa_mutacao=0.2
+):
+    """
+    Executa o Algoritmo Genético para encontrar a melhor rota.
+    """
 
-def otimizarRotaGa(distancias, qtdPontosEntrega, 
-                   tamPopulacao=100, 
-                   numGeracoes=500, 
-                   taxaCrossover=0.8, 
-                   taxaMutacao=0.2):
-    
     # --- 1. Definição dos Tipos ---
     # (Verifica se já existe para evitar erro de re-criação no notebook/console)
     if not hasattr(creator, "FitnessMin"):
@@ -46,12 +52,12 @@ def otimizarRotaGa(distancias, qtdPontosEntrega,
 
     # --- 2. Configuração da Toolbox ---
     toolbox = base.Toolbox()
-    
-    # CORREÇÃO: Genes agora vão de 0 até (qtd - 1). 
-    # Ex: se são 4 pontos, índices serão [0, 1, 2, 3]
-    indicesPontos = list(range(qtdPontosEntrega)) 
 
-    toolbox.register("genes", random.sample, indicesPontos, len(indicesPontos))
+    # Genes vão de 0 até (qtd - 1).
+    # Ex: se são 4 pontos, índices serão [0, 1, 2, 3]
+    indices_pontos = list(range(qtd_pontos_entrega))
+
+    toolbox.register("genes", random.sample, indices_pontos, len(indices_pontos))
     toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.genes)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
@@ -62,22 +68,24 @@ def otimizarRotaGa(distancias, qtdPontosEntrega,
     toolbox.register("select", tools.selTournament, tournsize=3)
 
     # --- 4. Execução ---
-    print(f"\nExecutando AG para {qtdPontosEntrega} pontos:")
-    print(f" População: {tamPopulacao} | Gerações: {numGeracoes}")
+    print(f"\nExecutando AG para {qtd_pontos_entrega} pontos:")
+    print(f" População: {tam_populacao} | Gerações: {num_geracoes}")
     
-    populacaoInicial = toolbox.population(n=tamPopulacao)
-    hof = tools.HallOfFame(1) 
-    
-    algorithms.eaSimple(populacaoInicial, 
-                        toolbox, 
-                        cxpb=taxaCrossover,
-                        mutpb=taxaMutacao,
-                        ngen=numGeracoes,
-                        halloffame=hof,
-                        verbose=True)
+    populacao_inicial = toolbox.population(n=tam_populacao)
+    hof = tools.HallOfFame(1)
+
+    algorithms.eaSimple(
+        populacao_inicial,
+        toolbox,
+        cxpb=taxa_crossover,
+        mutpb=taxa_mutacao,
+        ngen=num_geracoes,
+        halloffame=hof,
+        verbose=True
+    )
 
     # --- 5. Retorno ---
-    melhorIndividuoIndices = hof[0]
-    melhorCusto = melhorIndividuoIndices.fitness.values[0]
+    melhor_individuo_indices = hof[0]
+    melhor_custo = melhor_individuo_indices.fitness.values[0]
 
-    return melhorIndividuoIndices, melhorCusto
+    return melhor_individuo_indices, melhor_custo

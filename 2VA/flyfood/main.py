@@ -1,65 +1,90 @@
-# Para medição de tempo de execução do programa e manipulação de arquivos
 import time
 import os
 
-# Importa os parsers de dados e o conversor
 from parser import parseArquivoMatriz, parseArquivoTsplib
 from converter import converterGridParaUpperRow
-
-# Importa APENAS a nova função de otimização por Algoritmo Genético
 from otimizador import otimizarRotaGa
 
-def lerArquivoMapa(caminhoMapa):
+
+def lerArquivoMapa(caminho_mapa):
     """
     Lê o arquivo .map.txt gerado pelo conversor e retorna um dicionário 
     de mapeamento de índice (int) para nome (str).
-    
-    Exemplo de entrada no arquivo: "1 A", "2 B"
-    Exemplo de saída: {0: 'R', 1: 'A', 2: 'B', ...}
-    (Ajustamos -1 pois o parser do AG considera R=0, mas o arquivo começa em 1)
     """
-    if not os.path.exists(caminhoMapa):
-        print(f"[Aviso] Arquivo de mapeamento não encontrado: {caminhoMapa}")
+    if not os.path.exists(caminho_mapa):
+        print(f"[Aviso] Arquivo de mapeamento não encontrado: {caminho_mapa}")
         return None
         
-    mapaNomes = {}
+    mapa_nomes = {}
     try:
-        with open(caminhoMapa, "r", encoding="utf-8") as arq:
+        with open(caminho_mapa, "r", encoding="utf-8") as arq:
             for linha in arq:
                 partes = linha.strip().split()
                 if len(partes) == 2:
-                    # O arquivo salva 1-R, 2-A... mas Python usa 0-R, 1-A...
-                    indice = int(partes[0]) - 1 
+                    indice = int(partes[0]) - 1  # arquivo começa em 1, AG usa 0
                     nome = partes[1]
-                    mapaNomes[indice] = nome
+                    mapa_nomes[indice] = nome
     except Exception as e:
         print(f"[Erro] Falha ao ler arquivo de mapa: {e}")
         return None
 
-    return mapaNomes
+    return mapa_nomes
 
 
-def main(cronometro=False):  
+def main(cronometro = False, auto_continuar = False):
     """
     Função principal do programa FlyFood (Versão 2.0 - Algoritmo Genético).
-    Controla o fluxo: Conversão (opcional) -> Leitura TSPLIB -> Execução AG -> Resultados.
+
+    Parâmetros:
+        cronometro: se True, mede o tempo de execução do AG.
+        auto_continuar:
+            - False -> converte e encerra.
+            - True  -> após converter, pergunta se deve continuar.
     """
     print("\n::: Otimizador de Rotas FlyFood (v2.0 - Genetic Algorithm) :::")
-    caminho = input("Digite o caminho para o arquivo: ")
+    caminho = input("Digite o caminho para o arquivo: ").strip()
 
-    # --- ETAPA 1: MODO CONVERSOR (Opcional) ---
-    # Permite transformar um grid original (matriz completa) em formato otimizado
+    # Quando usamos o auto_continuar, guardamos aqui o caminho do mapa convertido
+    caminho_mapa_forcado = None
+
+    # --- ETAPA 1: MODO CONVERSOR  ---
     try:
-        modoConv = input("Deseja converter este arquivo [formato grid] para TSPLIB (s/n)? ").strip().lower()
+        modo_conv = input(
+            "Deseja converter este arquivo [formato grid] para TSPLIB (s/n)? "
+        ).strip().lower()
         
-        if modoConv == "s":
+        if modo_conv == "s":
             print("\n--- Iniciando Conversão ---")
             dados = parseArquivoMatriz(caminho)
-            dados["origem"] = caminho  # Passa o nome original para gerar os nomes de saída
-            converterGridParaUpperRow(dados)
-            print("Conversão concluída. Você pode rodar o programa novamente usando o arquivo .upper.txt gerado.\n")
-            return # Encerra o programa após a conversão
+            dados["origem"] = caminho  # nome original do arquivo de grid
+
+            # Conversão gera .upper.txt e .map.txt
+            caminho_upper, caminho_map = converterGridParaUpperRow(dados)
+            caminho_mapa_forcado = caminho_map 
+
+            if not auto_continuar:
+                # para aqui e avisa o usuário dos arquivos gerados
+                print("Conversão concluída.")
+                print("Execute novamente o programa usando o arquivo:")
+                print(f"  {caminho_upper}\n")
+                return
             
+            else:
+                # Modo interativo: pergunta o que o usuário quer fazer após conversão
+                print("Conversão concluída.")
+                print(f"Arquivo convertido gerado em: {caminho_upper}")
+                opcao = input(
+                    "Pressione ENTER para continuar usando o arquivo convertido\n"
+                    "ou digite 'sair' para encerrar o programa: "
+                ).strip().lower()
+
+                if opcao == "sair":
+                    print("Encerrando programa. Você pode executá-lo novamente quando quiser.")
+                    return
+                else:
+                    print("Prosseguindo com a otimização usando o arquivo convertido...\n")
+                    caminho = caminho_upper
+
     except FileNotFoundError:
         print(f"\n[Erro Crítico] O arquivo '{caminho}' não foi encontrado.")
         return
@@ -67,78 +92,70 @@ def main(cronometro=False):
         print(f"\n[Erro Inesperado] Falha na conversão: {e}")
         return
     
-    # --- ETAPA 2: MODO OTIMIZADOR (Padrão) ---
+    # --- ETAPA 2: MODO OTIMIZADOR ---
     print("\n--- Iniciando Otimização ---")
 
-    #try:
+    try:
         # 1. Carrega a matriz de distâncias (arquivo .upper.txt)
-        # parseArquivoTsplib retorna o dicionário de distâncias e a quantidade de pontos
-    distancias, qtdPontos = parseArquivoTsplib(caminho)
+        distancias, qtd_pontos = parseArquivoTsplib(caminho)
         
-        # 2. Carrega o arquivo de mapeamento de nomes (.map.txt)
-        # Tenta adivinhar o nome do arquivo de mapa trocando a extensão
-    caminhoMapa = caminho.lower().replace(".upper.txt", ".map.txt")
-    if ".upper.txt" not in caminho.lower():
-             # Fallback caso o arquivo não tenha a extensão padrão
-             caminhoMapa = os.path.splitext(caminho)[0] + ".map.txt"
-             
-    mapaNomes = lerArquivoMapa(caminhoMapa)
+        # 2. Define o caminho do arquivo de mapeamento de nomes (.map.txt)
+        if caminho_mapa_forcado is not None:
+            # Veio da conversão nesta mesma execução
+            caminho_mapa = caminho_mapa_forcado
+        else:
+            # Tenta adivinhar a partir do nome do arquivo de entrada
+            caminho_mapa = caminho.lower().replace(".upper.txt", ".map.txt")
+            if ".upper.txt" not in caminho.lower():
+                # Fallback: troca só a extensão
+                caminho_mapa = os.path.splitext(caminho)[0] + ".map.txt"
         
-    if mapaNomes is None:
+        mapa_nomes = lerArquivoMapa(caminho_mapa)
+        if mapa_nomes is None:
             print("Não foi possível carregar os nomes dos pontos. O programa será encerrado.")
             return
 
-    print(f"Matriz carregada com sucesso. Otimizando rota para {qtdPontos} pontos de entrega (+ Ponto R)...")
+        print(f"Matriz carregada com sucesso. Otimizando rota para {qtd_pontos} pontos de entrega (+ Ponto R)...")
 
         # --- ETAPA 3: Execução do Algoritmo Genético ---
-    duracaoAlgoritmo = 0
+        duracao_algoritmo = 0
         
-    if cronometro:
-            tempoInicial = time.perf_counter()
+        if cronometro:
+            tempo_inicial = time.perf_counter()
 
-        # Chamada única ao otimizador (Força Bruta foi removida)
-    melhorIndices, melhorCusto = otimizarRotaGa(
-            distancias, 
-            qtdPontos,
-            tamPopulacao=100,   # Pode ajustar aqui
-            numGeracoes=500,    # Pode ajustar aqui
-            taxaCrossover=0.8,
-            taxaMutacao=0.2
+        melhor_indices, melhor_custo = otimizarRotaGa(
+            distancias,
+            qtd_pontos,
+            tam_populacao=100,
+            num_geracoes=500,      # Pode ajustar
+            taxa_crossover=0.8,    # Pode ajustar
+            taxa_mutacao=0.2
         )
 
-    if cronometro:
-            tempoFinal = time.perf_counter()
-            duracaoAlgoritmo = tempoFinal - tempoInicial
+        if cronometro:
+            tempo_final = time.perf_counter()
+            duracao_algoritmo = tempo_final - tempo_inicial
 
         # --- ETAPA 4: Tradução e Exibição dos Resultados ---
-    print("\nCálculo finalizado. Apresentando resultados...")
+        print("\nCálculo finalizado. Apresentando resultados...")
 
-        # CORREÇÃO AQUI: Somamos +1 no índice 'i' para pegar o nome correto no mapa
-        # O mapa tem: 0=R, 1=A, 2=B...
-        # O AG retorna: 0, 1... (que significam 1º ponto de entrega, 2º ponto...)
-        # Então AG(0) -> Mapa(1)='A'
-    nomesRota = [mapaNomes.get(i + 1, f"?{i}?") for i in melhorIndices]
-        
-    rotaFormatada = " -> ".join(nomesRota)
+        nomes_rota = [mapa_nomes.get(i + 1, f"?{i}?") for i in melhor_indices]
+        rota_formatada = " -> ".join(nomes_rota)
 
-    print("\n-------------------------------------")
-    print(f"Melhor rota encontrada: R -> {rotaFormatada} -> R")
-    print(f"Custo total: {melhorCusto} dronômetros")
-        
-    if cronometro:
-        print(f"\nTempo de execução do algoritmo: {duracaoAlgoritmo:.4f} segundos")
-    print("-------------------------------------")
+        print("\n-------------------------------------")
+        print(f"Melhor rota encontrada: R -> {rota_formatada} -> R")
+        print(f"Custo total: {melhor_custo} dronômetros")
+        if cronometro:
+            print(f"\nTempo de execução do algoritmo: {duracao_algoritmo:.4f} segundos")
+        print("-------------------------------------")
 
-''' except FileNotFoundError:
+    except FileNotFoundError:
         print(f"\n[Erro] O arquivo '{caminho}' não foi encontrado.")
-        print("Dica: Verifique se você digitou o caminho correto para o arquivo .upper.txt")
+        print("Dica: verifique se você digitou o caminho correto para o arquivo .upper.txt")
     except Exception as e:
-        print(f"\n[Erro Crítico] Ocorreu um erro durante a otimização: {e}")'''
-        # É útil imprimir o erro completo para debug, se necessário:
-        # import traceback
-        # traceback.print_exc()
+        print(f"\n[Erro Crítico] Ocorreu um erro durante a otimização: {e}")
 
 
-# Ponto de entrada para execução como módulo (python -m ...)
 if __name__ == "__main__":
-    main(cronometro=True)
+    # Aqui é possível escolher o comportamento do cronometro e/ou do fluxo automatico pós conversão
+    main(cronometro=True, auto_continuar=True)
