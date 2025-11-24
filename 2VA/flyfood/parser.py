@@ -24,7 +24,7 @@ def parseArquivoTsplib(caminho_arquivo):
     distancias = {}
 
     # Verifica a quantidade de elementos a partir dos elementos presentes na primeira linha do arquivo
-    elementos_primeira_linha = linhas[0].split(" ")
+    elementos_primeira_linha = linhas[0].split(" ") + 1
     qtd_elementos = len(elementos_primeira_linha)
 
     # Loop de varredura das linhas(i)

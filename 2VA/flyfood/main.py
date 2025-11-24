@@ -126,10 +126,10 @@ def main(cronometro = False, auto_continuar = False):
         melhor_indices, melhor_custo = otimizarRotaGa(
             distancias,
             qtd_pontos,
-            tam_populacao=100,
-            num_geracoes=500,      # Pode ajustar
-            taxa_crossover=0.8,    # Pode ajustar
-            taxa_mutacao=0.2
+            tam_populacao=100,     # Ajustável
+            num_geracoes=500,      # Condição de parada (ajustável)
+            taxa_crossover=0.8,    # Ajustável
+            taxa_mutacao=0.2       # Ajustável
         )
 
         if cronometro:
