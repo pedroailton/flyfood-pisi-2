@@ -63,15 +63,19 @@ def salvarUpperRow(D, caminho_saida):
             linha = " ".join(str(D[i][j]) for j in range(i + 1, n))
             arq.write(linha + "\n")
 
-
-def salvarMapeamento(pontos, caminho_mapa):
+def salvarMapeamento(pontos, coords, caminho_mapa):
     """
-    Salva um arquivo de mapeamento índice → rótulo.
+    Salva o arquivo .map.txt no formato:
+    INDICE NOME LINHA COLUNA
+    Exemplo:
+    1 R 0 5
+    2 A 4 2
     """
     with open(caminho_mapa, "w", encoding="utf-8") as arq:
         for i, rotulo in enumerate(pontos, start=1):
-            arq.write(f"{i} {rotulo}\n")
-
+            l, c = coords[rotulo]
+            # Grava: ID, Nome, Linha, Coluna
+            arq.write(f"{i} {rotulo} {l} {c}\n")
 
 def converterGridParaUpperRow(dados_parse, pasta_saida="saida"):
     """
@@ -91,7 +95,8 @@ def converterGridParaUpperRow(dados_parse, pasta_saida="saida"):
     caminho_map = os.path.join(pasta_saida, f"{nome_base}.map.txt")
 
     salvarUpperRow(D, caminho_upper)
-    salvarMapeamento(pontos, caminho_map)
+
+    salvarMapeamento(pontos, coords, caminho_map)
 
     print("\nConversão concluída com sucesso!")
     print(f"  Pontos detectados: {len(pontos)} ({', '.join(pontos)})")

@@ -1,35 +1,12 @@
 import time
 import os
 
-from parser import parseArquivoMatriz, parseArquivoTsplib
+import traceback
+
+from parser import parseArquivoMatriz, parseArquivoTsplib, lerArquivoMapa
 from converter import converterGridParaUpperRow
 from otimizador import otimizarRotaGa
-
-
-def lerArquivoMapa(caminho_mapa):
-    """
-    Lê o arquivo .map.txt gerado pelo conversor e retorna um dicionário 
-    de mapeamento de índice (int) para nome (str).
-    """
-    if not os.path.exists(caminho_mapa):
-        print(f"[Aviso] Arquivo de mapeamento não encontrado: {caminho_mapa}")
-        return None
-        
-    mapa_nomes = {}
-    try:
-        with open(caminho_mapa, "r", encoding="utf-8") as arq:
-            for linha in arq:
-                partes = linha.strip().split()
-                if len(partes) == 2:
-                    indice = int(partes[0]) - 1  # arquivo começa em 1, AG usa 0
-                    nome = partes[1]
-                    mapa_nomes[indice] = nome
-    except Exception as e:
-        print(f"[Erro] Falha ao ler arquivo de mapa: {e}")
-        return None
-
-    return mapa_nomes
-
+from visualizador import plotar_dados_logbook, plotar_mapa_flyfood
 
 def main(cronometro = False, auto_continuar = False):
     """
@@ -110,7 +87,7 @@ def main(cronometro = False, auto_continuar = False):
                 # Fallback: troca só a extensão
                 caminho_mapa = os.path.splitext(caminho)[0] + ".map.txt"
         
-        mapa_nomes = lerArquivoMapa(caminho_mapa)
+        mapa_nomes, coords_mapa = lerArquivoMapa(caminho_mapa)
         if mapa_nomes is None:
             print("Não foi possível carregar os nomes dos pontos. O programa será encerrado.")
             return
@@ -123,7 +100,7 @@ def main(cronometro = False, auto_continuar = False):
         if cronometro:
             tempo_inicial = time.perf_counter()
 
-        melhor_indices, melhor_custo = otimizarRotaGa(
+        melhor_indices, melhor_custo, logbook = otimizarRotaGa(
             distancias,
             qtd_pontos,
             tam_populacao=100,     # Ajustável
@@ -149,10 +126,23 @@ def main(cronometro = False, auto_continuar = False):
             print(f"\nTempo de execução do algoritmo: {duracao_algoritmo:.4f} segundos")
         print("-------------------------------------")
 
+        # 1. Convergência (Sempre gera se tiver logbook)
+        plotar_dados_logbook(logbook, "grafico_convergencia.png")
+        
+        # 2. Mapa 2D (Só gera se o .map.txt forneceu coordenadas)
+        if coords_mapa:
+            print("Coordenadas encontradas no .map.txt. Gerando mapa 2D...")
+            plotar_mapa_flyfood(coords_mapa, melhor_indices, mapa_nomes, "grafico_mapa.png")
+        else:
+            print("[Aviso] O arquivo .map.txt existe mas não contém coordenadas (formato antigo?).")
+            print("        O gráfico de mapa 2D não será gerado.")
+
     except FileNotFoundError:
         print(f"\n[Erro] O arquivo '{caminho}' não foi encontrado.")
         print("Dica: verifique se você digitou o caminho correto para o arquivo .upper.txt")
     except Exception as e:
+        print("\n--- DETALHES DO ERRO ---")
+        traceback.print_exc()  # <--- ESSE É O COMANDO MÁGICO
         print(f"\n[Erro Crítico] Ocorreu um erro durante a otimização: {e}")
 
 

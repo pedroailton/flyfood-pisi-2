@@ -1,4 +1,5 @@
 import random
+import numpy as np
 from deap import base, creator, tools, algorithms
 
 # --- Função de Aptidão (Fitness Function) ---
@@ -40,7 +41,7 @@ def otimizarRotaGa(
     taxa_mutacao=0.2
 ):
     """
-    Executa o Algoritmo Genético para encontrar a melhor rota.
+    Executa o Algoritmo Genético para encontrar a melhor rota, dentro de um determinado intervalo de gerações.
     """
 
     # --- 1. Definição dos Tipos ---
@@ -67,6 +68,11 @@ def otimizarRotaGa(
     toolbox.register("mutate", tools.mutShuffleIndexes, indpb=0.05)
     toolbox.register("select", tools.selTournament, tournsize=3)
 
+    # Isso cria o monitoramento igual ao notebook enviado
+    stats = tools.Statistics(lambda ind: ind.fitness.values)
+    stats.register("min", np.min)
+    stats.register("avg", np.mean)
+
     # --- 4. Execução ---
     print(f"\nExecutando AG para {qtd_pontos_entrega} pontos:")
     print(f" População: {tam_populacao} | Gerações: {num_geracoes}")
@@ -74,18 +80,19 @@ def otimizarRotaGa(
     populacao_inicial = toolbox.population(n=tam_populacao)
     hof = tools.HallOfFame(1)
 
-    algorithms.eaSimple(
+    _, logbook = algorithms.eaSimple(
         populacao_inicial,
         toolbox,
         cxpb=taxa_crossover,
         mutpb=taxa_mutacao,
         ngen=num_geracoes,
         halloffame=hof,
+        stats=stats,
         verbose=True
-    )
+    ) # Ignora-se o primeiro retorno da função eaSimple() com um underline, para ficar evidente
 
     # --- 5. Retorno ---
     melhor_individuo_indices = hof[0]
     melhor_custo = melhor_individuo_indices.fitness.values[0]
 
-    return melhor_individuo_indices, melhor_custo
+    return melhor_individuo_indices, melhor_custo, logbook
