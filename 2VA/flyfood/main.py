@@ -1,7 +1,7 @@
 import time
 import os
 
-import traceback
+import traceback # Biblioteca para verificação de erros (deve ser apagada na versão final)
 
 from parser import parseArquivoMatriz, parseArquivoTsplib, lerArquivoMapa
 from converter import converterGridParaUpperRow
@@ -127,12 +127,26 @@ def main(cronometro = False, auto_continuar = False):
         print("-------------------------------------")
 
         # 1. Convergência (Sempre gera se tiver logbook)
-        plotar_dados_logbook(logbook, "grafico_convergencia.png")
+        print("\n--- Gerando Gráficos ---")
+
+        # Pega o diretório onde este arquivo main.py está salvo
+        dir_base = os.path.dirname(os.path.abspath(__file__))
+        
+        caminho_pasta_graficos = os.path.join(dir_base, "graficos")
+        
+        # Cria a pasta se ela não existir
+        os.makedirs(caminho_pasta_graficos, exist_ok=True)
+        print(f"Os arquivos serão salvos em: {caminho_pasta_graficos}")
+        nome_arquivo_conv = os.path.join(caminho_pasta_graficos, "grafico_convergencia.png")
+        plotar_dados_logbook(logbook, nome_arquivo_conv)
         
         # 2. Mapa 2D (Só gera se o .map.txt forneceu coordenadas)
         if coords_mapa:
             print("Coordenadas encontradas no .map.txt. Gerando mapa 2D...")
-            plotar_mapa_flyfood(coords_mapa, melhor_indices, mapa_nomes, "grafico_mapa.png")
+
+            nome_arquivo_mapa = os.path.join(caminho_pasta_graficos, "grafico_mapa.png")
+
+            plotar_mapa_flyfood(coords_mapa, melhor_indices, mapa_nomes, nome_arquivo_mapa)
         else:
             print("[Aviso] O arquivo .map.txt existe mas não contém coordenadas (formato antigo?).")
             print("        O gráfico de mapa 2D não será gerado.")
@@ -142,7 +156,7 @@ def main(cronometro = False, auto_continuar = False):
         print("Dica: verifique se você digitou o caminho correto para o arquivo .upper.txt")
     except Exception as e:
         print("\n--- DETALHES DO ERRO ---")
-        traceback.print_exc()  # <--- ESSE É O COMANDO MÁGICO
+        traceback.print_exc()
         print(f"\n[Erro Crítico] Ocorreu um erro durante a otimização: {e}")
 
 
