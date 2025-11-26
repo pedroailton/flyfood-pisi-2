@@ -8,6 +8,21 @@ from converter import converterGridParaUpperRow
 from otimizador import otimizarRotaGa
 from visualizador import plotar_dados_logbook, plotar_mapa_flyfood
 
+def limpar_graficos_antigos(pasta_graficos):
+    """
+    Remove arquivos de imagem antigos para evitar confusão com rodadas anteriores do programa.
+    """
+    arquivos_para_apagar = ["grafico_convergencia.png", "grafico_mapa.png"]
+    
+    if os.path.exists(pasta_graficos):
+        for arquivo in arquivos_para_apagar:
+            caminho_completo = os.path.join(pasta_graficos, arquivo)
+            try:
+                if os.path.exists(caminho_completo):
+                    os.remove(caminho_completo)
+            except Exception as e:
+                print(f"[Aviso] Não foi possível limpar {arquivo}: {e}")
+
 def main(cronometro = False, auto_continuar = False):
     """
     Função principal do programa FlyFood (Versão 2.0 - Algoritmo Genético).
@@ -18,10 +33,18 @@ def main(cronometro = False, auto_continuar = False):
             - False -> converte e encerra.
             - True  -> após converter, pergunta se deve continuar.
     """
-    print("\n::: Otimizador de Rotas FlyFood (v2.0 - Genetic Algorithm) :::")
-    caminho = input("Digite o caminho para o arquivo: ").strip()
 
-    # Quando usamos o auto_continuar, guardamos aqui o caminho do mapa convertido
+    print("\n::: Otimizador de Rotas FlyFood v2.0 :::")
+
+    # --- ETAPA 0: PREPARAÇÃO DE AMBIENTE  ---
+    dir_base = os.path.dirname(os.path.abspath(__file__))
+    caminho_pasta_graficos = os.path.join(dir_base, "graficos")
+    os.makedirs(caminho_pasta_graficos, exist_ok=True)
+    
+    # Apaga gráficos da rodada anterior AGORA
+    limpar_graficos_antigos(caminho_pasta_graficos)
+
+    caminho = input("Digite o caminho para o arquivo: ").strip()
     caminho_mapa_forcado = None
 
     # --- ETAPA 1: MODO CONVERSOR  ---
@@ -69,7 +92,7 @@ def main(cronometro = False, auto_continuar = False):
         print(f"\n[Erro Inesperado] Falha na conversão: {e}")
         return
     
-    # --- ETAPA 2: MODO OTIMIZADOR ---
+    # --- ETAPA 2: OTIMIZADOR ---
     print("\n--- Iniciando Otimização ---")
 
     try:
@@ -89,8 +112,13 @@ def main(cronometro = False, auto_continuar = False):
         
         mapa_nomes, coords_mapa = lerArquivoMapa(caminho_mapa)
         if mapa_nomes is None:
-            print("Não foi possível carregar os nomes dos pontos. O programa será encerrado.")
-            return
+            print("[Aviso] Arquivo .map.txt não encontrado. Gerando nomes padrão e desativando gráfico 2D.")
+            # Cria um dicionário simples: {0: "1", 1: "2", ...}
+            # O AG usa índice 0..N, vamos chamar de "Ponto 1..N"
+            mapa_nomes = {i: str(i + 1) for i in range(qtd_pontos)}
+            coords_mapa = None # Garante que não tentaremos plotar mapa
+        else:
+            print("Arquivo de mapa carregado com sucesso.")
 
         print(f"Matriz carregada com sucesso. Otimizando rota para {qtd_pontos} pontos de entrega (+ Ponto R)...")
 
