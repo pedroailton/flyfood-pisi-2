@@ -12,7 +12,6 @@ def lerArquivoMapa(caminho_mapa):
     tem_coordenadas = False
 
     if not os.path.exists(caminho_mapa):
-        print(f"[Aviso] Arquivo de mapeamento não encontrado: {caminho_mapa}")
         return None, None
 
     try:

@@ -82,17 +82,20 @@ def converterGridParaUpperRow(dados_parse, pasta_saida="saida"):
     Função principal da conversão.
     Recebe o resultado de parseArquivo() e gera:
       - um arquivo .upper.txt com as distâncias
-      - um arquivo .map.txt com o mapeamento dos rótulos
+      - um arquivo .map.txt com o mapeamento dos rótulos]
+      + Ambos serão salvos na subpasta "saidas", criada automaticamente após a primeira rodada do programa
     """
-    os.makedirs(pasta_saida, exist_ok=True)
+    dir_script = os.path.dirname(os.path.abspath(__file__))
+    caminho_pasta_saida = os.path.join(dir_script, pasta_saida)
+    os.makedirs(caminho_pasta_saida, exist_ok=True)
 
     matriz = dados_parse["matriz"]
     pontos, coords = coletarPontos(matriz)
     D = construirMatrizDistancias(pontos, coords)
 
     nome_base = os.path.splitext(os.path.basename(dados_parse.get("origem", "matriz")))[0]
-    caminho_upper = os.path.join(pasta_saida, f"{nome_base}.upper.txt")
-    caminho_map = os.path.join(pasta_saida, f"{nome_base}.map.txt")
+    caminho_upper = os.path.join(caminho_pasta_saida, f"{nome_base}.upper.txt")
+    caminho_map = os.path.join(caminho_pasta_saida, f"{nome_base}.map.txt")
 
     salvarUpperRow(D, caminho_upper)
 

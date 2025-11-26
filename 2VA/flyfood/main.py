@@ -104,11 +104,16 @@ def main(cronometro = False, auto_continuar = False):
             # Veio da conversão nesta mesma execução
             caminho_mapa = caminho_mapa_forcado
         else:
-            # Tenta adivinhar a partir do nome do arquivo de entrada
-            caminho_mapa = caminho.lower().replace(".upper.txt", ".map.txt")
-            if ".upper.txt" not in caminho.lower():
-                # Fallback: troca só a extensão
-                caminho_mapa = os.path.splitext(caminho)[0] + ".map.txt"
+            # Pega o diretório e o nome do arquivo sem extensão, respeitando o caminho original
+            diretorio, nome_arquivo = os.path.split(caminho)
+            nome_sem_extensao = os.path.splitext(nome_arquivo)[0]
+            
+            # Se o arquivo original termina em .upper, removemos esse sufixo extra
+            if nome_sem_extensao.lower().endswith(".upper"):
+                nome_sem_extensao = nome_sem_extensao[:-6] # Remove .upper
+            
+            # Monta o caminho do mapa na mesma pasta do arquivo original
+            caminho_mapa = os.path.join(diretorio, nome_sem_extensao + ".map.txt")
         
         mapa_nomes, coords_mapa = lerArquivoMapa(caminho_mapa)
         if mapa_nomes is None:
