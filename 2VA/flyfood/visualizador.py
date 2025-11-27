@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-def plotar_dados_logbook(logbook, save_path="grafico_convergencia.png"):
+def plotarDadosLogbook(logbook, save_path="grafico_convergencia.png"):
     """
     Plota o gráfico de evolução do Algoritmo Genético baseado nos dados do Logbook.
     Gera linhas para: Média e Melhor Caso (Mínimo).
@@ -30,7 +30,7 @@ def plotar_dados_logbook(logbook, save_path="grafico_convergencia.png"):
     plt.savefig(save_path, dpi=300) # dpi=300 garante alta qualidade para impressão/PDF
     plt.close() # Fecha para não sobrepor gráficos futuros
 
-def plotar_mapa_flyfood(coords, rota_indices, nomes_mapa, save_path="mapa_rota.png"):
+def plotarMapaFlyfood(coords, rota_indices, nomes_mapa, save_path="mapa_rota.png"):
     """
     Plota a rota final em um grid 2D simulando o mapa do FlyFood.
     

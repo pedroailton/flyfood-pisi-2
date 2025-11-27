@@ -6,7 +6,7 @@ import traceback # Biblioteca para verificação de erros (deve ser apagada na v
 from parser import parseArquivoMatriz, parseArquivoTsplib, lerArquivoMapa
 from converter import converterGridParaUpperRow
 from otimizador import otimizarRotaGa
-from visualizador import plotar_dados_logbook, plotar_mapa_flyfood
+from visualizador import plotarDadosLogbook, plotarMapaFlyfood
 
 def limpar_graficos_antigos(pasta_graficos):
     """
@@ -171,7 +171,7 @@ def main(cronometro = False, auto_continuar = False):
         os.makedirs(caminho_pasta_graficos, exist_ok=True)
         print(f"Os arquivos serão salvos em: {caminho_pasta_graficos}")
         nome_arquivo_conv = os.path.join(caminho_pasta_graficos, "grafico_convergencia.png")
-        plotar_dados_logbook(logbook, nome_arquivo_conv)
+        plotarDadosLogbook(logbook, nome_arquivo_conv)
         
         # 2. Mapa 2D (Só gera se o .map.txt forneceu coordenadas)
         if coords_mapa:
@@ -179,7 +179,7 @@ def main(cronometro = False, auto_continuar = False):
 
             nome_arquivo_mapa = os.path.join(caminho_pasta_graficos, "grafico_mapa.png")
 
-            plotar_mapa_flyfood(coords_mapa, melhor_indices, mapa_nomes, nome_arquivo_mapa)
+            plotarMapaFlyfood(coords_mapa, melhor_indices, mapa_nomes, nome_arquivo_mapa)
         else:
             print("[Aviso] O arquivo .map.txt existe mas não contém coordenadas (formato antigo?).")
             print("        O gráfico de mapa 2D não será gerado.")
