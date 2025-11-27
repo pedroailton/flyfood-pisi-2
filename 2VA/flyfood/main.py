@@ -137,7 +137,7 @@ def main(cronometro = False, auto_continuar = False):
             distancias,
             qtd_pontos,
             tam_populacao=100,     # Ajustável
-            num_geracoes=500,      # Condição de parada (ajustável)
+            num_geracoes=500,      # Condição de parada -> ajustável
             taxa_crossover=0.8,    # Ajustável
             taxa_mutacao=0.2       # Ajustável
         )

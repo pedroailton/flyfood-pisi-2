@@ -119,8 +119,12 @@ O arquivo deve ter o seguinte formato:
         <td>Formatação do programa, para que se encaixe no padrão de formatação PEP 8 da linguagem.</td>
     </tr>
     <tr>
-        <td>pandas</td>
-        <td>Criação de daataframes com dados da execução do algoritmo genético para uso no matplotlib</td>
+        <td>deap</td>
+        <td>colocar</td>
+    </tr>
+    <tr>
+        <td>numpy</td>
+        <td>colocar</td>
     </tr>
     <tr>
         <td>matplotlib</td>
@@ -131,7 +135,7 @@ O arquivo deve ter o seguinte formato:
 <h2>Instalações e Execução</h2>
 <p>
 O projeto utiliza duas bibliotecas fora do padrão do Python: a <code>pandas</code> e a <code>matplotlib</code>, portanto, a instalação deles é necessária, além do <strong>Python 3</strong>. Para instalá-los, execute no terminal o seguinte comando:
-<pre><code>pip install pandas matplotlib </code></pre>
+<pre><code>pip install numpy deap matplotlib </code></pre>
 </p>
 <p>Para executar o programa, utilize o seguinte comando no terminal, dentro da pasta do projeto:</p>
 <pre><code>python main.py</code></pre>
