@@ -136,8 +136,8 @@ def main(cronometro = False, auto_continuar = False):
         melhor_indices, melhor_custo, logbook = otimizarRotaGa(
             distancias,
             qtd_pontos,
-            tam_populacao=100,     # Ajustável
-            num_geracoes=500,      # Condição de parada -> ajustável
+            tam_populacao=350,     # Ajustável
+            num_geracoes=700,     # Condição de parada -> ajustável
             taxa_crossover=0.8,    # Ajustável
             taxa_mutacao=0.2       # Ajustável
         )

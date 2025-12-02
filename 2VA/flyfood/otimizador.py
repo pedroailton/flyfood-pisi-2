@@ -30,15 +30,104 @@ def _calcularAptidao(individuo, distancias):
 
     return (custo_total,)
 
+def _mutacaoInversao(individuo, indpb):
+    """
+    Mutação por Inversão (Standard para TSP).
+    Seleciona dois pontos aleatórios na rota e inverte o trecho entre eles.
+    Isso ajuda a 'descruzar' caminhos no mapa.
+    """
+    if random.random() < indpb:
+        tam = len(individuo)
+        if tam < 2: return individuo,
+        
+        # Escolhe dois índices aleatórios (ex: corte no ponto 5 e no ponto 20)
+        a, b = random.sample(range(tam), 2)
+        
+        # Garante que 'a' seja menor que 'b' para fatiar corretamente
+        if a > b:
+            a, b = b, a
+        
+        # Inverte o trecho do meio (slicing do Python [::-1] inverte a lista)
+        individuo[a:b+1] = individuo[a:b+1][::-1]
+        
+    return individuo,
+
+def algoritmo_elitista(pop, toolbox, cxpb, mutpb, ngen, stats=None, halloffame=None, verbose=True):
+    """
+    Versão personalizada do eaSimple com ELITISMO.
+    Garante que o melhor indivíduo da geração anterior seja copiado
+    para a próxima geração sem alterações.
+    """
+    logbook = tools.Logbook()
+    logbook.header = ['gen', 'nevals'] + (stats.fields if stats else [])
+
+    # Avalia a primeira geração
+    invalid_ind = [ind for ind in pop if not ind.fitness.valid]
+    fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
+    for ind, fit in zip(invalid_ind, fitnesses):
+        ind.fitness.values = fit
+
+    if halloffame is not None:
+        halloffame.update(pop)
+
+    record = stats.compile(pop) if stats else {}
+    logbook.record(gen=0, nevals=len(invalid_ind), **record)
+    if verbose: print(logbook.stream)
+
+    # Começa a evolução
+    for gen in range(1, ngen + 1):
+        # 1. Seleção (Gera descendentes)
+        offspring = toolbox.select(pop, len(pop))
+        
+        # Clona para não alterar os originais
+        offspring = list(map(toolbox.clone, offspring))
+
+        # 2. Aplica Crossover e Mutação
+        for child1, child2 in zip(offspring[::2], offspring[1::2]):
+            if random.random() < cxpb:
+                toolbox.mate(child1, child2)
+                del child1.fitness.values
+                del child2.fitness.values
+
+        for mutant in offspring:
+            if random.random() < mutpb:
+                toolbox.mutate(mutant)
+                del mutant.fitness.values
+
+        # 3. Avalia os novos indivíduos
+        invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
+        fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
+        for ind, fit in zip(invalid_ind, fitnesses):
+            ind.fitness.values = fit
+
+        # 4. Atualiza o Hall of Fame (O melhor de todos os tempos)
+        if halloffame is not None:
+            halloffame.update(offspring)
+
+        # --- A MÁGICA DO ELITISMO AQUI ---
+        # Substitui o primeiro indivíduo da nova população pelo Melhor de Todos (HoF[0])
+        # Isso garante que a melhor solução nunca se perde.
+        offspring[0] = toolbox.clone(halloffame[0])
+        # ---------------------------------
+
+        # Substitui a população antiga pela nova
+        pop[:] = offspring
+
+        # Log e Print
+        record = stats.compile(pop) if stats else {}
+        logbook.record(gen=gen, nevals=len(invalid_ind), **record)
+        if verbose: print(logbook.stream)
+
+    return pop, logbook
 
 # --- Função Principal de Otimização ---
 def otimizarRotaGa(
     distancias,
     qtd_pontos_entrega,
     tam_populacao=100,
-    num_geracoes=500,
-    taxa_crossover=0.8,
-    taxa_mutacao=0.2
+    num_geracoes=150,
+    taxa_crossover=0.85,
+    taxa_mutacao=0.15
 ):
     """
     Executa o Algoritmo Genético para encontrar a melhor rota, dentro de um determinado intervalo de gerações.
@@ -65,7 +154,7 @@ def otimizarRotaGa(
     # --- 3. Operadores ---
     toolbox.register("evaluate", _calcularAptidao, distancias=distancias)
     toolbox.register("mate", tools.cxOrdered)
-    toolbox.register("mutate", tools.mutShuffleIndexes, indpb=0.05)
+    toolbox.register("mutate", _mutacaoInversao, indpb=0.2)
     toolbox.register("select", tools.selTournament, tournsize=3)
 
     # Isso cria o monitoramento igual ao notebook enviado
@@ -80,7 +169,7 @@ def otimizarRotaGa(
     populacao_inicial = toolbox.population(n=tam_populacao)
     hof = tools.HallOfFame(1)
 
-    _, logbook = algorithms.eaSimple(
+    _, logbook = algoritmo_elitista(
         populacao_inicial,
         toolbox,
         cxpb=taxa_crossover,
