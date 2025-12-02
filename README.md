@@ -11,26 +11,6 @@
 
 <img src="1VA/assets/imagens/Logo FlyFood.png" width="250" height="250" alt="Demonstração do projeto">
 
-<h2>Formato da Entrada</h2>
-
-O arquivo de entrada (`.txt`) deve seguir uma estrutura de matriz para representar o mapa de entregas.
-
-O arquivo deve ter o seguinte formato:
-
-```
-4 5
-0 0 0 0 D
-0 A 0 0 0
-0 0 0 0 C
-R 0 B 0 0
-```
-<ul>
-    <li>Uma matriz A de dimensões M×N que representa a área de entrega;</li>
-    <li>Cada elemento Aij​ (com i representando a linha e j a coluna) contém um identificador;</li>
-    <li>O valor "0" indica uma posição vazia;</li>
-    <li>Letras (como 'R', 'A', 'B', etc.) identificam pontos de interesse.</li>
-</ul>
-
 <h2>Ferramentas Utilizadas</h2>
 <table>
     <tr>
@@ -50,6 +30,28 @@ R 0 B 0 0
         <td>Repositório e cooperação no desenvolvimento</td>
     </tr>
 </table>
+
+<h1>VERSÃO 1VA</h1>
+
+<h2>Formato da Entrada</h2>
+
+O arquivo de entrada (`.txt`) deve seguir uma estrutura de matriz para representar o mapa de entregas.
+
+O arquivo deve ter o seguinte formato:
+
+```
+4 5
+0 0 0 0 D
+0 A 0 0 0
+0 0 0 0 C
+R 0 B 0 0
+```
+<ul>
+    <li>Uma matriz A de dimensões M×N que representa a área de entrega;</li>
+    <li>Cada elemento Aij​ (com i representando a linha e j a coluna) contém um identificador;</li>
+    <li>O valor "0" indica uma posição vazia;</li>
+    <li>Letras (como 'R', 'A', 'B', etc.) identificam pontos de interesse.</li>
+</ul>
 
 <h2>Bibliotecas Utilizadas</h2>
 <table>
@@ -77,8 +79,64 @@ R 0 B 0 0
 <pre><code>python main.py</code></pre>
 <p>Após a execução, o programa solicitará o caminho para o arquivo de entrada (ex: <code>entrada.txt</code>).</p>
 
-<h2>Próximos Passos</h2>
-<ol> 
-    <li>Aplicação de Heurística no algoritmo para escolha da rota satisfatória</li>
-    <li>Conversão para uma aplicação web completa com HTML, CSS, JavaScript (Front-End) API RESTful e Python.</li>
-</ol>
+<h1>VERSÃO 2VA</h1>
+
+<h2>Formato da Entrada</h2>
+
+O arquivo de entrada (`.txt`) deve seguir uma estrutura de matriz para representar o mapa de entregas.
+
+O arquivo deve ter o seguinte formato:
+
+```
+3 2 5 7
+3 4 4
+3 5
+2
+```
+<ul>
+    <li>Uma matriz A em que cada elemento de coordenadas (i,j) possui a distância dos pontos i para j (que é a mesma de j para i)</li>
+    <li>A matriz desconsidera o </li>
+    <li>O valor "0" indica uma posição vazia;</li>
+    <li>Letras (como 'R', 'A', 'B', etc.) identificam pontos de interesse.</li>
+</ul>
+
+<h2>Bibliotecas Utilizadas</h2>
+<table>
+    <tr>
+        <td>time</td>
+        <td>Medição do tempo de execução do programa (cronômetro).</td>
+    </tr>
+    <tr>
+        <td>itertools</td>
+        <td>Geração de todas as permutações de rotas possíveis para a implementação do algoritmo de força bruta.</td>
+    </tr>
+    <tr>
+        <td>csv</td>
+        <td>Leitura e manipulação de arquivos no formato CSV.</td>
+    </tr>
+    <tr>
+        <td>black</td>
+        <td>Formatação do programa, para que se encaixe no padrão de formatação PEP 8 da linguagem.</td>
+    </tr>
+    <tr>
+        <td>deap</td>
+        <td>colocar</td>
+    </tr>
+    <tr>
+        <td>numpy</td>
+        <td>colocar</td>
+    </tr>
+    <tr>
+        <td>matplotlib</td>
+        <td>Geração de gráficos da execução do algoritmo genético e mapa em plano do Flyfood e Brasil58 com suas distâncias</td>
+    </tr>
+</table>
+
+<h2>Instalações e Execução</h2>
+<p>
+O projeto utiliza duas bibliotecas fora do padrão do Python: a <code>pandas</code> e a <code>matplotlib</code>, portanto, a instalação deles é necessária, além do <strong>Python 3</strong>. Para instalá-los, execute no terminal o seguinte comando:
+<pre><code>pip install numpy deap matplotlib </code></pre>
+</p>
+<p>Para executar o programa, utilize o seguinte comando no terminal, dentro da pasta do projeto:</p>
+<pre><code>python main.py</code></pre>
+<p>Após a execução, o programa solicitará o caminho para o arquivo de entrada (ex: <code>entrada.txt</code>).</p>

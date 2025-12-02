@@ -5,6 +5,7 @@ def lerArquivo(caminho_arquivo):
     Lê o conteúdo de um arquivo de texto (.txt) ou CSV (.csv) e
     retorna uma lista de linhas que representam a matriz do mapa.
     """
+
     linhas = []
 
     # detecta a extensão do arquivo
