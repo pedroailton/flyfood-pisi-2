@@ -11,7 +11,6 @@ def _calcularAptidao(individuo, distancias):
     ponto_r = 0
     custo_total = 0
 
-    # CORREÇÃO: O AG usa 0..N-1, mas a matriz usa 1..N para os pontos de entrega.
     # Então somamos +1 em todos os índices vindos do indivíduo.
 
     # 1. Custo do 'R' (0) até o primeiro ponto
@@ -104,7 +103,6 @@ def algoritmo_elitista(pop, toolbox, cxpb, mutpb, ngen, stats=None, halloffame=N
         if halloffame is not None:
             halloffame.update(offspring)
 
-        # --- A MÁGICA DO ELITISMO AQUI ---
         # Substitui o primeiro indivíduo da nova população pelo Melhor de Todos (HoF[0])
         # Isso garante que a melhor solução nunca se perde.
         offspring[0] = toolbox.clone(halloffame[0])

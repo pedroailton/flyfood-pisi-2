@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import numpy as np
 
 def plotarDadosLogbook(logbook, save_path="grafico_convergencia.png"):
     """
